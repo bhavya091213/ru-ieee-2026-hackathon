@@ -1,0 +1,34 @@
+{
+  "plugin_root": "/Users/bhavyapatel/.claude/plugins/cache/piercelamb-plugins/deep-implement/0.2.1",
+  "sections_dir": "/Users/bhavyapatel/Documents/Projects/focus-group-agent/planning/sections",
+  "target_dir": "/Users/bhavyapatel/Documents/Projects/focus-group-agent",
+  "state_dir": "/Users/bhavyapatel/Documents/Projects/focus-group-agent/planning/implementation",
+  "git_root": "/Users/bhavyapatel/Documents/Projects/focus-group-agent",
+  "commit_style": "simple",
+  "test_command": "uv run pytest",
+  "sections": [
+    "section-01-schemas",
+    "section-02-gemini-client",
+    "section-03-extraction",
+    "section-04-clustering",
+    "section-05-persona-synthesis",
+    "section-06-orchestrator-state",
+    "section-07-retrieval-mock",
+    "section-08-simulation-rounds",
+    "section-09-moderator-analyst",
+    "section-10-dashboard-assembly",
+    "section-11-fastapi-routes",
+    "section-12-tribe-scoring",
+    "section-13-integration"
+  ],
+  "sections_state": {},
+  "pre_commit": {
+    "present": false,
+    "type": "none",
+    "config_file": null,
+    "native_hook": null,
+    "may_modify_files": false,
+    "detected_formatters": []
+  },
+  "created_at": "2026-04-18T20:43:08.388526+00:00"
+}
