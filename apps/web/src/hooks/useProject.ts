@@ -49,10 +49,39 @@ export function useProject() {
 
       setStatus("ingesting");
       setProgress({ stage: "Ingesting sources...", percent: null });
-      await startIngest(nextProjectId, urls);
+      await startIngest(nextProjectId, urls.length > 0 ? urls : ["mock://consumer-electronics"]);
 
-      setStatus("ready");
-      setProgress({ stage: "Sources ready", percent: 100 });
+      setStatus("simulating");
+      setProgress({ stage: "Starting simulation...", percent: null });
+
+      const facets = ["camera", "battery", "price", "design", "privacy", "ecosystem"];
+      await runSimulation(nextProjectId, name, hypotheses.join("; "), hypotheses, facets);
+
+      stopPolling();
+      pollRef.current = setInterval(async () => {
+        const result = await pollSimulationStatus(nextProjectId);
+        const s = result.data;
+
+        setProgress({
+          stage: s.done
+            ? s.phase === "DONE"
+              ? "Simulation complete"
+              : `Failed: ${s.error ?? "unknown error"}`
+            : `Phase: ${s.phase}`,
+          percent: null,
+        });
+
+        if (s.done) {
+          stopPolling();
+          if (s.error) {
+            setStatus("error");
+            setError(s.error);
+          } else {
+            setStatus("ready");
+            setProgress({ stage: "Simulation complete", percent: 100 });
+          }
+        }
+      }, 2000);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Unable to create project");

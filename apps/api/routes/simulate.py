@@ -38,7 +38,14 @@ async def _run_simulation_task(
         from core.personas.cluster import cluster_chunks
         from core.personas.synthesize import synthesize_personas
 
+        app_state.sim_status[project_id] = {
+            "phase": "CLUSTERING", "error": None, "done": False
+        }
         clusters = await cluster_chunks(chunks_as_dicts, target_range=(3, 6))
+
+        app_state.sim_status[project_id] = {
+            "phase": "SYNTHESIZING", "error": None, "done": False
+        }
         personas = await synthesize_personas(clusters)
 
         if not personas:
@@ -72,13 +79,21 @@ async def _run_simulation_task(
             result = await score_tribe(state.round2_responses, state.scenario)
             return state.transition(tribe_result=result, phase=SimPhase.DONE)
 
+        def _wrap(phase_name: str, func):
+            async def wrapped(state: SimulationState) -> SimulationState:
+                app_state.sim_status[project_id] = {
+                    "phase": phase_name, "error": None, "done": False
+                }
+                return await func(state)
+            return wrapped
+
         phase_funcs = {
-            SimPhase.RETRIEVING: retrieve_phase,
-            SimPhase.ROUND1: round1_phase,
-            SimPhase.MODERATING: moderator_phase,
-            SimPhase.ROUND2: round2_phase,
-            SimPhase.ANALYZING: analyst_phase,
-            SimPhase.SCORING: scoring_phase,
+            SimPhase.RETRIEVING: _wrap("RETRIEVING", retrieve_phase),
+            SimPhase.ROUND1: _wrap("ROUND1", round1_phase),
+            SimPhase.MODERATING: _wrap("MODERATING", moderator_phase),
+            SimPhase.ROUND2: _wrap("ROUND2", round2_phase),
+            SimPhase.ANALYZING: _wrap("ANALYZING", analyst_phase),
+            SimPhase.SCORING: _wrap("SCORING", scoring_phase),
         }
 
         initial = SimulationState(

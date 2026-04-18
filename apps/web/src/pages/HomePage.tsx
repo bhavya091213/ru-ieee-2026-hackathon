@@ -17,7 +17,7 @@ export function HomePage({ onProjectCreated }: HomePageProps) {
     }
   }, [onProjectCreated, projectId, status]);
 
-  const busy = status === "creating" || status === "ingesting";
+  const busy = status === "creating" || status === "ingesting" || status === "simulating";
 
   return (
     <main className="min-h-screen px-4 py-10 sm:px-6 md:py-14">
