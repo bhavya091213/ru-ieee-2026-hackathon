@@ -48,8 +48,8 @@ export function useProject() {
       setProjectId(nextProjectId);
 
       setStatus("ingesting");
-      setProgress({ stage: "Ingesting sources...", percent: null });
-      await startIngest(nextProjectId, urls.length > 0 ? urls : ["mock://consumer-electronics"]);
+      setProgress({ stage: "Fetching & chunking sources...", percent: null });
+      await startIngest(nextProjectId, urls, name);
 
       setStatus("simulating");
       setProgress({ stage: "Starting simulation...", percent: null });

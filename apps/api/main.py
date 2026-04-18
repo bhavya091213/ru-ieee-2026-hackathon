@@ -22,12 +22,14 @@ async def lifespan(app: FastAPI):
     app.state.sim_status = {}
     app.state.running_sims = set()
     app.state.tasks = {}
+    app.state.project_products = {}
 
     yield
 
     app.state.projects.clear()
     app.state.sim_status.clear()
     app.state.running_sims.clear()
+    app.state.project_products.clear()
 
 
 def create_app() -> FastAPI:

@@ -51,14 +51,15 @@ export function createProject(
 
 export function startIngest(
   projectId: string,
-  sources: string[] = ["mock://consumer-electronics"],
+  sources: string[] = [],
+  productName: string = "",
 ): Promise<ApiResult<IngestStatus>> {
   return fetchWithFallback(
     `/api/projects/${projectId}/ingest`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sources }),
+      body: JSON.stringify({ sources, product_name: productName }),
     },
     { source_count: 12, chunk_count: 87 },
   );

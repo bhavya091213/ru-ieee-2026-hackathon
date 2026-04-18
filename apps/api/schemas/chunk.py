@@ -16,6 +16,16 @@ VALID_FACETS: frozenset[str] = frozenset(
 )
 
 
+class RawDocument(BaseModel):
+    doc_id: str
+    title: str
+    author: str | None = None
+    date: str | None = None
+    text: str
+    url: str
+    canonical_product: str
+
+
 class ExtractedEntity(BaseModel):
     id: str
     title: str

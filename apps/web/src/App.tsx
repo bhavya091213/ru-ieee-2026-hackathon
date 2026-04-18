@@ -1,32 +1,73 @@
 import { useState } from "react";
 
-import { HomePage } from "./pages/HomePage";
-import { ProjectDashboard } from "./pages/ProjectDashboard";
+import { LandingPage } from "./pages/LandingPage";
+import { WizardPage } from "./pages/WizardPage";
+import { SimulationPage } from "./pages/SimulationPage";
+import { DashboardPage } from "./pages/DashboardPage";
 
-type Page = "home" | "dashboard";
+type Page = "landing" | "wizard" | "simulation" | "dashboard";
+
+export interface ProjectContext {
+  projectId: string | null;
+  productName: string;
+  description: string;
+  hypotheses: string[];
+  facets: string[];
+  seedUrls: string[];
+}
+
+const emptyProject: ProjectContext = {
+  projectId: null,
+  productName: "",
+  description: "",
+  hypotheses: [],
+  facets: [],
+  seedUrls: [],
+};
 
 export default function App() {
-  const [page, setPage] = useState<Page>("home");
-  const [projectId, setProjectId] = useState<string | null>(null);
-  const [searchSession, setSearchSession] = useState(0);
+  const [page, setPage] = useState<Page>("landing");
+  const [project, setProject] = useState<ProjectContext>(emptyProject);
 
-  const resetSearch = () => {
-    setProjectId(null);
-    setPage("home");
-    setSearchSession((current) => current + 1);
+  const reset = () => {
+    setProject(emptyProject);
+    setPage("landing");
   };
 
-  if (page === "dashboard") {
-    return <ProjectDashboard onSearchAgain={resetSearch} projectId={projectId} />;
+  if (page === "wizard") {
+    return (
+      <WizardPage
+        onSubmit={(ctx) => {
+          setProject(ctx);
+          setPage("simulation");
+        }}
+        onBack={reset}
+      />
+    );
   }
 
-  return (
-    <HomePage
-      key={searchSession}
-      onProjectCreated={(id) => {
-        setProjectId(id);
-        setPage("dashboard");
-      }}
-    />
-  );
+  if (page === "simulation") {
+    return (
+      <SimulationPage
+        project={project}
+        onComplete={(projectId) => {
+          setProject((p) => ({ ...p, projectId }));
+          setPage("dashboard");
+        }}
+        onError={reset}
+      />
+    );
+  }
+
+  if (page === "dashboard") {
+    return (
+      <DashboardPage
+        projectId={project.projectId}
+        productName={project.productName}
+        onNewStudy={reset}
+      />
+    );
+  }
+
+  return <LandingPage onStart={() => setPage("wizard")} />;
 }

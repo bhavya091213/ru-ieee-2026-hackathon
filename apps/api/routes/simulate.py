@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import uuid
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
 
@@ -9,6 +11,19 @@ from apps.api.schemas.scenario import Scenario
 from core.simulation.orchestrator import SimPhase
 
 router = APIRouter(tags=["simulate"])
+
+
+def _load_chunks_from_jsonl(data_dir: str, canonical_product: str) -> list[dict]:
+    chunks_path = Path(data_dir) / "chunks" / f"{canonical_product}.jsonl"
+    if not chunks_path.exists():
+        return []
+    chunks = []
+    with open(chunks_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                chunks.append(json.loads(line))
+    return chunks
 
 
 async def _run_simulation_task(
@@ -25,15 +40,36 @@ async def _run_simulation_task(
 
     try:
         import config as _config
+
         settings = _config.get_settings()
 
-        from core.simulation.mock_corpus import DEMO_CHUNKS
+        canonical_product = None
+        if hasattr(app_state, "project_products"):
+            canonical_product = app_state.project_products.get(project_id)
 
-        chunks_as_dicts = [
-            {"id": c["chunk_id"], "text": c["text"], "facet": c["facet"],
-             "stance": c["stance"], "entity_ids": []}
-            for c in DEMO_CHUNKS
-        ]
+        data_dir = str(Path("data"))
+
+        chunks_for_clustering: list[dict] = []
+        if canonical_product:
+            raw_chunks = _load_chunks_from_jsonl(data_dir, canonical_product)
+            for c in raw_chunks:
+                meta = c.get("metadata", {})
+                chunks_for_clustering.append({
+                    "id": c["chunk_id"],
+                    "text": c["text"],
+                    "facet": meta.get("source_type", "other"),
+                    "stance": "review",
+                    "entity_ids": [],
+                })
+
+        if not chunks_for_clustering:
+            app_state.sim_status[project_id] = {
+                "phase": "FAILED",
+                "error": "No chunks found. Please ingest data first.",
+                "done": True,
+            }
+            app_state.running_sims.discard(project_id)
+            return
 
         from core.personas.cluster import cluster_chunks
         from core.personas.synthesize import synthesize_personas
@@ -41,7 +77,8 @@ async def _run_simulation_task(
         app_state.sim_status[project_id] = {
             "phase": "CLUSTERING", "error": None, "done": False
         }
-        clusters = await cluster_chunks(chunks_as_dicts, target_range=(3, 6))
+        target = (3, min(6, max(3, len(chunks_for_clustering) // 3)))
+        clusters = await cluster_chunks(chunks_for_clustering, target_range=target)
 
         app_state.sim_status[project_id] = {
             "phase": "SYNTHESIZING", "error": None, "done": False
@@ -49,33 +86,49 @@ async def _run_simulation_task(
         personas = await synthesize_personas(clusters)
 
         if not personas:
+            chunk_ids = [c["id"] for c in chunks_for_clustering[:2]]
             personas = [
                 Persona(
                     segment_label=f"Segment-{i}",
                     summary=f"Auto-generated persona {i}",
                     jobs_to_be_done=["evaluate product"],
                     feature_priorities={"camera": 0.7, "price": 0.5},
-                    beliefs=[Belief(claim="Product seems interesting", stance="mixed",
-                                    evidence_chunk_ids=[DEMO_CHUNKS[0]["chunk_id"], DEMO_CHUNKS[1]["chunk_id"]])],
-                    skepticism_profile=SkepticismProfile(trust_in_reviews=0.6, trust_in_brand_claims=0.4, influencer_susceptibility=0.5),
+                    beliefs=[
+                        Belief(
+                            claim="Product seems interesting",
+                            stance="mixed",
+                            evidence_chunk_ids=chunk_ids,
+                        )
+                    ],
+                    skepticism_profile=SkepticismProfile(
+                        trust_in_reviews=0.6,
+                        trust_in_brand_claims=0.4,
+                        influencer_susceptibility=0.5,
+                    ),
                     graph_entity_ids=[],
                 )
                 for i in range(3)
             ]
 
+        chunk_summaries = [
+            c["text"][:120] for c in chunks_for_clustering[:15]
+        ]
+
         async def moderator_phase(state: SimulationState) -> SimulationState:
-            chunk_summaries = [c["text"][:100] for c in DEMO_CHUNKS[:10]]
             mq = await analyze_disagreement(state.round1_responses, chunk_summaries)
             return state.transition(moderator_question=mq, phase=SimPhase.ROUND2)
 
         async def analyst_phase(state: SimulationState) -> SimulationState:
             summary = await synthesize_results(
-                state.round1_responses, state.round2_responses, state.moderator_question
+                state.round1_responses,
+                state.round2_responses,
+                state.moderator_question,
             )
             return state.transition(analyst_summary=summary, phase=SimPhase.SCORING)
 
         async def scoring_phase(state: SimulationState) -> SimulationState:
             from core.scoring.tribe_runner import score_tribe
+
             result = await score_tribe(state.round2_responses, state.scenario)
             return state.transition(tribe_result=result, phase=SimPhase.DONE)
 
@@ -85,6 +138,7 @@ async def _run_simulation_task(
                     "phase": phase_name, "error": None, "done": False
                 }
                 return await func(state)
+
             return wrapped
 
         phase_funcs = {
@@ -121,15 +175,22 @@ async def _run_simulation_task(
                 app_state.projects[project_id] = project.model_copy(
                     update={"dashboard": dashboard, "status": "completed"}
                 )
-            app_state.sim_status[project_id] = {"phase": "DONE", "error": None, "done": True}
+            app_state.sim_status[project_id] = {
+                "phase": "DONE", "error": None, "done": True
+            }
         elif final_state.phase == SimPhase.FAILED:
             app_state.sim_status[project_id] = {
                 "phase": "FAILED", "error": final_state.error, "done": True
             }
         else:
-            app_state.sim_status[project_id] = {"phase": "DONE", "error": None, "done": True}
+            app_state.sim_status[project_id] = {
+                "phase": "DONE", "error": None, "done": True
+            }
 
     except Exception as exc:
+        import traceback
+
+        traceback.print_exc()
         app_state.sim_status[project_id] = {
             "phase": "FAILED", "error": str(exc), "done": True
         }
@@ -148,7 +209,7 @@ async def simulate(project_id: str, body: Scenario, request: Request):
 
     request.app.state.running_sims.add(project_id)
     request.app.state.sim_status[project_id] = {
-        "phase": "RETRIEVING", "error": None, "done": False
+        "phase": "PREPARING", "error": None, "done": False
     }
 
     run_id = str(uuid.uuid4())
