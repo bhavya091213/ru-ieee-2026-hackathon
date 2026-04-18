@@ -132,6 +132,50 @@ class TestSimulate:
         assert resp.json()["phase"] == "IDLE"
 
 
+    @pytest.mark.asyncio
+    async def test_simulate_409_when_already_running(self, client, app):
+        create_resp = await client.post("/api/projects", json={"name": "Test"})
+        pid = create_resp.json()["project_id"]
+        await client.post(f"/api/projects/{pid}/ingest", json={"sources": ["mock"]})
+
+        app.state.running_sims.add(pid)
+
+        resp = await client.post(
+            f"/api/projects/{pid}/simulate",
+            json={
+                "product_name": "TestPhone",
+                "description": "Test",
+                "hypotheses": ["H1"],
+                "facets_to_explore": ["camera"],
+            },
+        )
+        assert resp.status_code == 409
+
+        app.state.running_sims.discard(pid)
+
+
+class TestTribe:
+    @pytest.mark.asyncio
+    async def test_tribe_disabled_returns_400(self, client, monkeypatch):
+        monkeypatch.setenv("TRIBE_ENABLED", "false")
+        import config
+        config.get_settings.cache_clear()
+
+        create_resp = await client.post("/api/projects", json={"name": "Test"})
+        pid = create_resp.json()["project_id"]
+        resp = await client.post(f"/api/projects/{pid}/tribe/score")
+        assert resp.status_code == 400
+
+    @pytest.mark.asyncio
+    async def test_tribe_unknown_project(self, client, monkeypatch):
+        monkeypatch.setenv("TRIBE_ENABLED", "true")
+        import config
+        config.get_settings.cache_clear()
+
+        resp = await client.post("/api/projects/nonexistent/tribe/score")
+        assert resp.status_code == 404
+
+
 class TestDashboard:
     @pytest.mark.asyncio
     async def test_dashboard_before_simulation(self, client):
