@@ -1,9 +1,19 @@
 const PERSONA_COLORS = [
-  "bg-cyan-400 text-cyan-950",
-  "bg-amber-300 text-amber-950",
-  "bg-emerald-300 text-emerald-950",
-  "bg-rose-300 text-rose-950",
-  "bg-violet-300 text-violet-950",
+  "bg-blue-100 text-blue-800",
+  "bg-amber-100 text-amber-800",
+  "bg-emerald-100 text-emerald-800",
+  "bg-rose-100 text-rose-800",
+  "bg-violet-100 text-violet-800",
+  "bg-cyan-100 text-cyan-800",
+] as const;
+
+const PERSONA_DOT_COLORS = [
+  "bg-blue-500",
+  "bg-amber-500",
+  "bg-emerald-500",
+  "bg-rose-500",
+  "bg-violet-500",
+  "bg-cyan-500",
 ] as const;
 
 export function getPersonaColor(personaId: string): string {
@@ -11,8 +21,14 @@ export function getPersonaColor(personaId: string): string {
   return PERSONA_COLORS[hash % PERSONA_COLORS.length];
 }
 
+export function getPersonaDot(personaId: string): string {
+  const hash = [...personaId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return PERSONA_DOT_COLORS[hash % PERSONA_DOT_COLORS.length];
+}
+
 export const sentimentClasses: Record<string, string> = {
-  positive: "border-emerald-400/60 bg-emerald-500/10 text-emerald-200",
-  neutral: "border-slate-500/60 bg-slate-500/10 text-slate-200",
-  negative: "border-rose-400/60 bg-rose-500/10 text-rose-200",
+  positive: "border-green-200 bg-green-50 text-green-700",
+  mixed: "border-amber-200 bg-amber-50 text-amber-700",
+  negative: "border-red-200 bg-red-50 text-red-700",
+  neutral: "border-gray-200 bg-gray-50 text-gray-600",
 };

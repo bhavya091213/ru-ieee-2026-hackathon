@@ -8,32 +8,28 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
-  public constructor(props: ErrorBoundaryProps) {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  public static getDerivedStateFromError(): ErrorBoundaryState {
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return { hasError: true };
   }
 
-  public componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("Panel crashed inside ErrorBoundary", error, info);
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    console.error("ErrorBoundary caught:", error, info);
   }
 
-  public render() {
+  render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded-xl bg-slate-800 p-6 text-center text-slate-100 shadow-lg">
-          Chart unavailable - reload to try again
+        <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 text-center text-sm text-gray-500">
+          This panel failed to render. Try refreshing the page.
         </div>
       );
     }
-
     return this.props.children;
   }
 }

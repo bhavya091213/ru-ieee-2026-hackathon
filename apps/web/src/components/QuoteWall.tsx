@@ -6,42 +6,34 @@ interface QuoteWallProps {
 }
 
 export function QuoteWall({ quotes }: QuoteWallProps) {
-  return (
-    <section className="rounded-[1.75rem] border border-white/8 bg-slate-900/80 p-6 shadow-lg">
-      <div className="mb-5">
-        <h2 className="font-display text-xl text-white">Quote Wall</h2>
-        <p className="mt-1 text-sm text-slate-400">
-          Quick scan of what sounds memorable, credible, or risky.
-        </p>
+  if (quotes.length === 0) {
+    return (
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm text-center text-gray-400">
+        No quotes available.
       </div>
+    );
+  }
 
-      <div className="columns-1 gap-4 md:columns-2">
-        {quotes.map((quote, index) => (
-          <article
-            key={`${quote.persona_id}-${quote.facet}-${index}`}
-            className="mb-4 break-inside-avoid rounded-2xl border border-white/8 bg-slate-950/70 p-5 shadow-lg transition-shadow hover:shadow-xl"
-          >
-            <div className="mb-4 flex items-center gap-3">
-              <span
-                className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getPersonaColor(
-                  quote.persona_id,
-                )}`}
-              >
-                {quote.segment_label}
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-gray-900">Quote Wall</h2>
+      <p className="mt-1 text-sm text-gray-500">Memorable lines from the panel</p>
+      <div className="mt-4 columns-1 gap-4 md:columns-2">
+        {quotes.map((q, i) => (
+          <article key={`${q.persona_id}-${i}`} className="mb-4 break-inside-avoid rounded-lg border border-gray-100 p-4">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${getPersonaColor(q.persona_id)}`}>
+                {q.segment_label}
               </span>
-              <span
-                className={`rounded-full border px-3 py-1 text-xs uppercase tracking-[0.2em] ${sentimentClasses[quote.sentiment] ?? sentimentClasses.neutral}`}
-              >
-                {quote.sentiment}
+              <span className={`rounded-full border px-2.5 py-0.5 text-xs capitalize ${sentimentClasses[q.sentiment] ?? sentimentClasses.neutral}`}>
+                {q.sentiment}
               </span>
             </div>
-            <p className="text-base leading-7 text-slate-100">"{quote.quote}"</p>
-            <p className="mt-4 text-xs uppercase tracking-[0.22em] text-slate-500">
-              {quote.facet}
-            </p>
+            <p className="text-sm leading-relaxed text-gray-700">"{q.quote}"</p>
+            <p className="mt-2 text-xs font-medium uppercase tracking-wider text-gray-400 capitalize">{q.facet}</p>
           </article>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

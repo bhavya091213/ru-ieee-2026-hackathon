@@ -4,45 +4,34 @@ interface KPICardsProps {
   evidenceCoverage: number;
 }
 
-function toneForMetric(value: number, inverse = false) {
-  const score = inverse ? 1 - value : value;
-  if (score >= 0.7) {
-    return "from-emerald-400/20 to-emerald-500/5 text-emerald-100 ring-emerald-400/20";
-  }
-  if (score >= 0.4) {
-    return "from-amber-300/20 to-amber-500/5 text-amber-100 ring-amber-300/20";
-  }
-  return "from-rose-300/20 to-rose-500/5 text-rose-100 ring-rose-300/20";
+function tone(value: number, inverse = false) {
+  const v = inverse ? 1 - value : value;
+  if (v >= 0.7) return "border-green-200 bg-green-50 text-green-700";
+  if (v >= 0.4) return "border-amber-200 bg-amber-50 text-amber-700";
+  return "border-red-200 bg-red-50 text-red-700";
 }
 
-export function KPICards({
-  consensus,
-  disagreement,
-  evidenceCoverage,
-}: KPICardsProps) {
+function labelColor(value: number, inverse = false) {
+  const v = inverse ? 1 - value : value;
+  if (v >= 0.7) return "text-green-600";
+  if (v >= 0.4) return "text-amber-600";
+  return "text-red-600";
+}
+
+export function KPICards({ consensus, disagreement, evidenceCoverage }: KPICardsProps) {
   const metrics = [
     { label: "Consensus", value: consensus, inverse: false },
     { label: "Disagreement", value: disagreement, inverse: true },
-    { label: "Evidence coverage", value: evidenceCoverage, inverse: false },
+    { label: "Evidence Coverage", value: evidenceCoverage, inverse: false },
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-3">
-      {metrics.map((metric) => (
-        <article
-          key={metric.label}
-          className={`animate-fade-in rounded-[1.5rem] border border-white/8 bg-gradient-to-br p-6 shadow-lg transition-shadow hover:shadow-xl ${toneForMetric(
-            metric.value,
-            metric.inverse,
-          )}`}
-        >
-          <p className="text-xs uppercase tracking-[0.3em] text-slate-300">
-            {metric.label}
-          </p>
-          <p className="mt-4 font-display text-4xl font-semibold">
-            {Math.round(metric.value * 100)}%
-          </p>
-        </article>
+    <div className="grid gap-4 sm:grid-cols-3">
+      {metrics.map((m) => (
+        <div key={m.label} className={`rounded-xl border p-5 ${tone(m.value, m.inverse)}`}>
+          <p className={`text-xs font-medium uppercase tracking-wider ${labelColor(m.value, m.inverse)}`}>{m.label}</p>
+          <p className="mt-2 text-3xl font-bold">{Math.round(m.value * 100)}%</p>
+        </div>
       ))}
     </div>
   );

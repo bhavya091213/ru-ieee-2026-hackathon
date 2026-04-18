@@ -1,5 +1,4 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-
 import type { DashboardPayload } from "../lib/types";
 
 interface ConsensusChartProps {
@@ -8,26 +7,27 @@ interface ConsensusChartProps {
 
 export function ConsensusChart({ featureScores }: ConsensusChartProps) {
   const data = Object.entries(featureScores).map(([facet, row]) => ({
-    facet,
+    facet: facet.charAt(0).toUpperCase() + facet.slice(1),
     mean: Number((row.mean * 100).toFixed(0)),
-    floor: Number((row.min * 100).toFixed(0)),
+    min: Number((row.min * 100).toFixed(0)),
   }));
 
   return (
-    <section className="rounded-[1.75rem] border border-white/8 bg-slate-900/80 p-6 shadow-lg">
-      <h2 className="font-display text-xl text-white">Consensus by Feature</h2>
-      <div className="mt-6 h-72">
+    <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-gray-900">Feature Scores</h2>
+      <p className="mt-1 text-sm text-gray-500">Mean vs minimum across personas</p>
+      <div className="mt-4 h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical">
-            <CartesianGrid stroke="rgba(148,163,184,0.14)" horizontal={false} />
-            <XAxis type="number" stroke="#94a3b8" />
-            <YAxis dataKey="facet" type="category" stroke="#94a3b8" />
+          <BarChart data={data} layout="vertical" margin={{ left: 20 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" horizontal={false} />
+            <XAxis type="number" domain={[0, 100]} stroke="#9ca3af" fontSize={12} />
+            <YAxis dataKey="facet" type="category" stroke="#9ca3af" fontSize={12} width={70} />
             <Tooltip />
-            <Bar dataKey="floor" fill="#334155" radius={[10, 10, 10, 10]} />
-            <Bar dataKey="mean" fill="#22d3ee" radius={[10, 10, 10, 10]} />
+            <Bar dataKey="min" name="Min" fill="#e5e7eb" radius={[0, 4, 4, 0]} />
+            <Bar dataKey="mean" name="Mean" fill="#3b82f6" radius={[0, 4, 4, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </section>
+    </div>
   );
 }
