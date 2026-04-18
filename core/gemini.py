@@ -27,6 +27,18 @@ def clear_cache() -> None:
     _cache.clear()
 
 
+def _strip_additional_properties(schema: dict) -> dict:
+    if isinstance(schema, dict):
+        schema = {
+            k: _strip_additional_properties(v)
+            for k, v in schema.items()
+            if k != "additionalProperties"
+        }
+    elif isinstance(schema, list):
+        schema = [_strip_additional_properties(item) for item in schema]
+    return schema
+
+
 async def generate_structured(
     prompt: str,
     response_schema: type[T],
@@ -49,9 +61,11 @@ async def generate_structured(
     settings = _config.get_settings()
     client = _config.get_gemini_client()
 
+    clean_schema = _strip_additional_properties(response_schema.model_json_schema())
+
     config_kwargs: dict = {
         "response_mime_type": "application/json",
-        "response_schema": response_schema,
+        "response_schema": clean_schema,
         "temperature": temperature,
     }
     if thinking_budget is not None:

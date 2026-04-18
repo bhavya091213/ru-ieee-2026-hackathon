@@ -18,6 +18,7 @@ from apps.api.schemas.dashboard import (
 )
 from apps.api.schemas.persona import Belief, Persona, SkepticismProfile
 from apps.api.schemas.project import Project
+from apps.api.schemas.retrieval import RetrievalResult
 from apps.api.schemas.scenario import Scenario
 from apps.api.schemas.simulation import AnalystSummary, ModeratorQuestion, PersonaResponse
 
@@ -44,4 +45,5 @@ __all__ = [
     "PersonaSummary",
     "DashboardPayload",
     "Project",
+    "RetrievalResult",
 ]
