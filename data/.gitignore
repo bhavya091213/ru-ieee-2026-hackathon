@@ -1,6 +1,39 @@
-# Ignore all generated data artifacts
-*
-# But keep the directory structure
-!.gitkeep
-!.gitignore
-!*/
+def fetch_url(url: str, canonical_product: str = "unknown") -> Optional[RawDocument]:
+    doc_id = generate_doc_id(url)
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10.0)
+        response.raise_for_status()
+
+        downloaded = response.text
+        result = trafilatura.extract(downloaded, output_format="json", with_metadata=True)
+
+        if not result:
+            return None
+
+        data = json.loads(result)
+        
+        # Convert to markdown for cleaner AI processing
+        clean_markdown = md_convert(data.get("text", ""))
+
+        # ALIGNMENT: Mapping extracted data to the exact keys Pydantic expects
+        # Ensure we are mapping Trafilatura data to the EXACT Pydantic field names
+        raw_doc = RawDocument(
+            doc_id=doc_id,
+            title=data.get("title", "Unknown Title"),
+            author=data.get("author") or "Unknown",
+            date=data.get("date") or "2026-04-18", # ERROR FIX: Map to 'date'
+            text=clean_markdown,                   # ERROR FIX: Map to 'text'
+            url=url,                               # ERROR FIX: Map to 'url'
+            canonical_product=canonical_product
+        )
+
+        return raw_doc
+
+    except Exception as e:
+        logger.error(f"Failed to fetch {url}: {str(e)}")
+        return None
