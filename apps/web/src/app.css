@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-slide-up: slide-up 0.35s ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-body);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgb(125 211 252 / 0.38), transparent 30%),
+    radial-gradient(circle at top right, rgb(253 230 138 / 0.35), transparent 28%),
+    linear-gradient(180deg, #f8fafc 0%, #eef6ff 50%, #fefce8 100%);
+}
