@@ -5,6 +5,10 @@ description = "AI-powered synthetic focus group simulator"
 requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2.0,<3.0",
+    "pydantic-settings>=2.0",
+    "python-dotenv>=1.0",
+    "google-genai>=1.0",
+    "google-api-core>=2.0",
 ]
 
 [dependency-groups]
