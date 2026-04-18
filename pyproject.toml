@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "panelforge-ws1"
+version = "0.1.0"
+description = "PanelForge Workstream 1: Data Pipeline & Graph Memory"
+requires-python = ">=3.11"
+dependencies = [
+    "trafilatura>=2.0.0",
+    "markdownify>=1.2.2",
+    "praw>=7.8.1",
+    "youtube-transcript-api>=1.2.4",
+    "sentence-transformers",
+    "chromadb>=1.5.8",
+    "networkx>=3.0",
+    "igraph>=1.0.0",
+    "leidenalg>=0.11.0",
+    "pandas>=3.0.0",
+    "pyarrow",
+    "pydantic>=2.0",
+    "google-genai",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

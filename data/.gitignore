@@ -1,0 +1,6 @@
+# Ignore all generated data artifacts
+*
+# But keep the directory structure
+!.gitkeep
+!.gitignore
+!*/
