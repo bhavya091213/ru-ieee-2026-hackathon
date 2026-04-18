@@ -26,7 +26,8 @@ END_MANIFEST -->
 | Section | Depends On | Blocks | Parallelizable |
 |---------|------------|--------|----------------|
 | section-01-schemas | - | all | Yes |
-| section-02-gemini-client | 01 | 03, 04, 05, 08, 09 | No |
+| section-02-gemini-client | 01 | 03, 04, 
+05, 08, 09 | No |
 | section-03-extraction | 01, 02 | 13 | Yes |
 | section-04-clustering | 01, 02 | 05 | Yes |
 | section-05-persona-synthesis | 01, 02, 04 | 06, 08 | No |
