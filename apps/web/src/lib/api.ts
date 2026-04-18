@@ -1,5 +1,11 @@
 import { mockDashboardPayload, mockTribeResult } from "./mockData";
-import type { DashboardPayload, IngestStatus, TribeResult } from "./types";
+import type {
+  DashboardPayload,
+  IngestStatus,
+  SimulateResponse,
+  SimulateStatus,
+  TribeResult,
+} from "./types";
 
 export type ApiResult<T> = { data: T; dataSource: "live" | "mock" };
 
@@ -37,29 +43,63 @@ export function createProject(
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, seed_urls: seedUrls, hypotheses }),
+      body: JSON.stringify({ name, description: hypotheses.join("; ") }),
     },
     { project_id: "mock-project-id" },
   );
 }
 
-export function startIngest(projectId: string): Promise<ApiResult<IngestStatus>> {
+export function startIngest(
+  projectId: string,
+  sources: string[] = ["mock://consumer-electronics"],
+): Promise<ApiResult<IngestStatus>> {
   return fetchWithFallback(
     `/api/projects/${projectId}/ingest`,
-    { method: "POST" },
-    { status: "complete", source_count: 12, chunk_count: 87 },
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sources }),
+    },
+    { source_count: 12, chunk_count: 87 },
   );
 }
 
-export function runSimulation(projectId: string): Promise<ApiResult<DashboardPayload>> {
+export function runSimulation(
+  projectId: string,
+  productName: string,
+  description: string,
+  hypotheses: string[],
+  facets: string[],
+): Promise<ApiResult<SimulateResponse>> {
   return fetchWithFallback(
     `/api/projects/${projectId}/simulate`,
-    { method: "POST" },
-    mockDashboardPayload,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product_name: productName,
+        description,
+        hypotheses,
+        facets_to_explore: facets,
+      }),
+    },
+    { run_id: "mock-run-id", status: "started" },
   );
 }
 
-export function fetchDashboard(projectId: string): Promise<ApiResult<DashboardPayload>> {
+export function pollSimulationStatus(
+  projectId: string,
+): Promise<ApiResult<SimulateStatus>> {
+  return fetchWithFallback(
+    `/api/projects/${projectId}/simulate/status`,
+    { method: "GET" },
+    { phase: "DONE", error: null, done: true },
+  );
+}
+
+export function fetchDashboard(
+  projectId: string,
+): Promise<ApiResult<DashboardPayload>> {
   return fetchWithFallback(
     `/api/projects/${projectId}/dashboard`,
     { method: "GET" },
@@ -67,9 +107,11 @@ export function fetchDashboard(projectId: string): Promise<ApiResult<DashboardPa
   );
 }
 
-export function scoreTribe(projectId: string): Promise<ApiResult<TribeResult>> {
+export function scoreTribe(
+  projectId: string,
+): Promise<ApiResult<TribeResult>> {
   return fetchWithFallback(
-    `/api/projects/${projectId}/tribe`,
+    `/api/projects/${projectId}/tribe/score`,
     { method: "POST" },
     mockTribeResult,
   );

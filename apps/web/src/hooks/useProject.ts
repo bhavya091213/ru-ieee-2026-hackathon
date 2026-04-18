@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
-import { createProject, runSimulation, startIngest } from "../lib/api";
+import {
+  createProject,
+  pollSimulationStatus,
+  runSimulation,
+  startIngest,
+} from "../lib/api";
 
 type ProjectStatus =
   | "idle"
@@ -23,6 +28,14 @@ export function useProject() {
     percent: null,
   });
   const [error, setError] = useState<string | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const stopPolling = useCallback(() => {
+    if (pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  }, []);
 
   const create = async (name: string, urls: string[], hypotheses: string[]) => {
     try {
@@ -36,7 +49,7 @@ export function useProject() {
 
       setStatus("ingesting");
       setProgress({ stage: "Ingesting sources...", percent: null });
-      await startIngest(nextProjectId);
+      await startIngest(nextProjectId, urls);
 
       setStatus("ready");
       setProgress({ stage: "Sources ready", percent: 100 });
@@ -46,7 +59,12 @@ export function useProject() {
     }
   };
 
-  const simulate = async () => {
+  const simulate = async (
+    productName: string,
+    description: string,
+    hypotheses: string[],
+    facets: string[],
+  ) => {
     if (!projectId) {
       return;
     }
@@ -54,10 +72,31 @@ export function useProject() {
     try {
       setError(null);
       setStatus("simulating");
-      setProgress({ stage: "Running simulation...", percent: null });
-      await runSimulation(projectId);
-      setStatus("ready");
-      setProgress({ stage: "Simulation complete", percent: 100 });
+      setProgress({ stage: "Starting simulation...", percent: null });
+
+      await runSimulation(projectId, productName, description, hypotheses, facets);
+
+      stopPolling();
+      pollRef.current = setInterval(async () => {
+        const result = await pollSimulationStatus(projectId);
+        const s = result.data;
+
+        setProgress({
+          stage: s.phase === "DONE" ? "Simulation complete" : `Phase: ${s.phase}`,
+          percent: null,
+        });
+
+        if (s.done) {
+          stopPolling();
+          if (s.phase === "DONE") {
+            setStatus("ready");
+            setProgress({ stage: "Simulation complete", percent: 100 });
+          } else {
+            setStatus("error");
+            setError(s.error ?? "Simulation failed");
+          }
+        }
+      }, 2000);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Unable to run simulation");
@@ -71,5 +110,6 @@ export function useProject() {
     error,
     create,
     simulate,
+    stopPolling,
   };
 }

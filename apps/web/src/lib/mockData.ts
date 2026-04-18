@@ -339,12 +339,12 @@ export const mockDashboardPayload: DashboardPayload = {
       "Privacy messaging creates confidence for some and friction for others.",
     ],
     top_risks: [
-      { label: "Over-claiming on AI", score: 0.7 },
-      { label: "Weak affordability narrative", score: 0.66 },
+      "Over-claiming on AI",
+      "Weak affordability narrative",
     ],
     top_wins: [
-      { label: "Camera proof points", score: 0.84 },
-      { label: "Battery clarity", score: 0.79 },
+      "Camera proof points",
+      "Battery clarity",
     ],
     feature_recommendations: [
       "Lead with camera evidence before abstract AI promises.",

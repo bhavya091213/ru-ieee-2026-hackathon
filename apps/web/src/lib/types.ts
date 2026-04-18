@@ -68,17 +68,27 @@ export interface TribeResult {
 export interface AnalystSummary {
   consensus_themes: string[];
   disagreement_themes: string[];
-  top_risks: ScoredLabel[];
-  top_wins: ScoredLabel[];
+  top_risks: string[];
+  top_wins: string[];
   feature_recommendations: string[];
   messaging_suggestions: string[];
   evidence_gaps: string[];
 }
 
 export interface IngestStatus {
-  status: string;
   source_count: number;
   chunk_count: number;
+}
+
+export interface SimulateResponse {
+  run_id: string;
+  status: string;
+}
+
+export interface SimulateStatus {
+  phase: string;
+  error: string | null;
+  done: boolean;
 }
 
 export interface GraphNode {
