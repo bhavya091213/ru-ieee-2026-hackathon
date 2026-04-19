@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { AnimatedBackground } from "./components/AnimatedBackground";
 import { LandingPage } from "./pages/LandingPage";
 import { WizardPage } from "./pages/WizardPage";
 import { SimulationPage } from "./pages/SimulationPage";
@@ -35,33 +36,25 @@ export default function App() {
     setPage("landing");
   };
 
+  let content: React.ReactNode;
+
   if (page === "wizard") {
-    return (
+    content = (
       <WizardPage
-        onSubmit={(ctx) => {
-          setProject(ctx);
-          setPage("simulation");
-        }}
+        onSubmit={(ctx) => { setProject(ctx); setPage("simulation"); }}
         onBack={reset}
       />
     );
-  }
-
-  if (page === "simulation") {
-    return (
+  } else if (page === "simulation") {
+    content = (
       <SimulationPage
         project={project}
-        onComplete={(projectId) => {
-          setProject((p) => ({ ...p, projectId }));
-          setPage("dashboard");
-        }}
+        onComplete={(projectId) => { setProject((p) => ({ ...p, projectId })); setPage("dashboard"); }}
         onError={reset}
       />
     );
-  }
-
-  if (page === "explore") {
-    return (
+  } else if (page === "explore") {
+    content = (
       <ExplorePage
         projectId={project.projectId}
         productName={project.productName}
@@ -69,10 +62,8 @@ export default function App() {
         onBack={() => setPage("dashboard")}
       />
     );
-  }
-
-  if (page === "dashboard") {
-    return (
+  } else if (page === "dashboard") {
+    content = (
       <DashboardPage
         projectId={project.projectId}
         productName={project.productName}
@@ -80,7 +71,14 @@ export default function App() {
         onExplore={() => setPage("explore")}
       />
     );
+  } else {
+    content = <LandingPage onStart={() => setPage("wizard")} />;
   }
 
-  return <LandingPage onStart={() => setPage("wizard")} />;
+  return (
+    <>
+      <AnimatedBackground />
+      <div className="relative z-10">{content}</div>
+    </>
+  );
 }

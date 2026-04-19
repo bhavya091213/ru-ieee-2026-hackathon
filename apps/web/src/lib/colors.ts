@@ -1,19 +1,19 @@
 const PERSONA_COLORS = [
-  "bg-blue-100 text-blue-800",
-  "bg-amber-100 text-amber-800",
-  "bg-emerald-100 text-emerald-800",
-  "bg-rose-100 text-rose-800",
-  "bg-violet-100 text-violet-800",
-  "bg-cyan-100 text-cyan-800",
+  "bg-[var(--color-vgreen)]/15 text-[var(--color-vgreen)]",
+  "bg-[var(--color-vyellow)]/15 text-[var(--color-vyellow)]",
+  "bg-[var(--color-vcyan)]/15 text-[var(--color-vcyan)]",
+  "bg-[var(--color-vred)]/15 text-[var(--color-vred)]",
+  "bg-[var(--color-vpurple)]/15 text-[var(--color-vpurple)]",
+  "bg-emerald-500/15 text-emerald-400",
 ] as const;
 
-const PERSONA_DOT_COLORS = [
-  "bg-blue-500",
-  "bg-amber-500",
-  "bg-emerald-500",
-  "bg-rose-500",
-  "bg-violet-500",
-  "bg-cyan-500",
+const DOT_COLORS = [
+  "bg-[var(--color-vgreen)]",
+  "bg-[var(--color-vyellow)]",
+  "bg-[var(--color-vcyan)]",
+  "bg-[var(--color-vred)]",
+  "bg-[var(--color-vpurple)]",
+  "bg-emerald-400",
 ] as const;
 
 export function getPersonaColor(personaId: string): string {
@@ -23,12 +23,12 @@ export function getPersonaColor(personaId: string): string {
 
 export function getPersonaDot(personaId: string): string {
   const hash = [...personaId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return PERSONA_DOT_COLORS[hash % PERSONA_DOT_COLORS.length];
+  return DOT_COLORS[hash % DOT_COLORS.length];
 }
 
 export const sentimentClasses: Record<string, string> = {
-  positive: "border-green-200 bg-green-50 text-green-700",
-  mixed: "border-amber-200 bg-amber-50 text-amber-700",
-  negative: "border-red-200 bg-red-50 text-red-700",
-  neutral: "border-gray-200 bg-gray-50 text-gray-600",
+  positive: "border-[var(--color-vgreen)]/30 bg-[var(--color-vgreen)]/10 text-[var(--color-vgreen)]",
+  mixed: "border-[var(--color-vyellow)]/30 bg-[var(--color-vyellow)]/10 text-[var(--color-vyellow)]",
+  negative: "border-[var(--color-vred)]/30 bg-[var(--color-vred)]/10 text-[var(--color-vred)]",
+  neutral: "border-[var(--color-surface-border)] bg-[var(--color-surface)]/50 text-[var(--color-text-dim)]",
 };

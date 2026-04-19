@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 text-center text-sm text-gray-500">
+        <div className="card p-6 text-center text-sm text-[var(--color-text-faint)]">
           This panel failed to render. Try refreshing the page.
         </div>
       );
