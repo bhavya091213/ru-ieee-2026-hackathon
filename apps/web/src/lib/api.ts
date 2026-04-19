@@ -15,7 +15,7 @@ async function fetchWithFallback<T>(
   fallback: T,
 ): Promise<ApiResult<T>> {
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), 10_000);
+  const timeoutId = window.setTimeout(() => controller.abort(), 600_000);
 
   try {
     const response = await fetch(url, { ...options, signal: controller.signal });
@@ -115,5 +115,21 @@ export function scoreTribe(
     `/api/projects/${projectId}/tribe/score`,
     { method: "POST" },
     mockTribeResult,
+  );
+}
+
+export function suggestFacets(
+  productName: string,
+  description: string = "",
+  seedUrls: string[] = [],
+): Promise<ApiResult<{ facets: string[] }>> {
+  return fetchWithFallback(
+    "/api/suggest-facets",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ product_name: productName, description, seed_urls: seedUrls }),
+    },
+    { facets: ["camera", "battery", "price", "design", "performance", "software"] },
   );
 }

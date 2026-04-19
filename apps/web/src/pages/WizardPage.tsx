@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { ProjectContext } from "../App";
-
-const AVAILABLE_FACETS = ["camera", "battery", "price", "design", "privacy", "ecosystem"] as const;
+import { suggestFacets } from "../lib/api";
 
 interface WizardPageProps {
   onSubmit: (ctx: ProjectContext) => void;
@@ -15,7 +14,10 @@ export function WizardPage({ onSubmit, onBack }: WizardPageProps) {
   const [seedUrls, setSeedUrls] = useState("");
   const [hypothesisInput, setHypothesisInput] = useState("");
   const [hypotheses, setHypotheses] = useState<string[]>([]);
-  const [facets, setFacets] = useState<string[]>(["camera", "battery", "price"]);
+  const [facets, setFacets] = useState<string[]>([]);
+  const [suggestedFacets, setSuggestedFacets] = useState<string[]>([]);
+  const [facetInput, setFacetInput] = useState("");
+  const [loadingFacets, setLoadingFacets] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const steps = ["Product Info", "Sources", "Hypotheses & Facets"];
@@ -28,6 +30,24 @@ export function WizardPage({ onSubmit, onBack }: WizardPageProps) {
     if (!v || hypotheses.includes(v)) return;
     setHypotheses((h) => [...h, v]);
     setHypothesisInput("");
+  };
+
+  const addCustomFacet = () => {
+    const v = facetInput.trim().toLowerCase();
+    if (!v || facets.includes(v)) { setFacetInput(""); return; }
+    setFacets((prev) => [...prev, v]);
+    if (!suggestedFacets.includes(v)) setSuggestedFacets((prev) => [...prev, v]);
+    setFacetInput("");
+  };
+
+  const handleSuggestFacets = async () => {
+    setLoadingFacets(true);
+    const urls = seedUrls.split("\n").map((u) => u.trim()).filter(Boolean);
+    const result = await suggestFacets(productName, description, urls);
+    const suggested = result.data.facets;
+    setSuggestedFacets(suggested);
+    setFacets(suggested);
+    setLoadingFacets(false);
   };
 
   const canProceed = () => {
@@ -133,13 +153,36 @@ export function WizardPage({ onSubmit, onBack }: WizardPageProps) {
 
               {/* Facets */}
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-gray-700">Facets to explore</label>
-                <div className="flex flex-wrap gap-2">
-                  {AVAILABLE_FACETS.map((f) => (
-                    <button key={f} type="button" onClick={() => toggleFacet(f)} className={`rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition ${facets.includes(f) ? "border-blue-200 bg-blue-50 text-blue-700" : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"}`}>
-                      {f}
-                    </button>
-                  ))}
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label className="text-sm font-medium text-gray-700">Facets to explore</label>
+                  <button
+                    type="button"
+                    onClick={handleSuggestFacets}
+                    disabled={loadingFacets || !productName.trim()}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1 text-xs font-medium text-white shadow-sm transition hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50"
+                  >
+                    {loadingFacets ? (
+                      <><span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" /> Generating...</>
+                    ) : (
+                      "AI Suggest"
+                    )}
+                  </button>
+                </div>
+                {suggestedFacets.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {suggestedFacets.map((f) => (
+                      <button key={f} type="button" onClick={() => toggleFacet(f)} className={`rounded-full border px-3.5 py-1.5 text-sm font-medium capitalize transition ${facets.includes(f) ? "border-blue-200 bg-blue-50 text-blue-700" : "border-gray-200 bg-white text-gray-500 hover:bg-gray-50"}`}>
+                        {f}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {suggestedFacets.length === 0 && !loadingFacets && (
+                  <p className="mb-3 text-xs text-gray-400">Click &quot;AI Suggest&quot; to generate facets based on your product.</p>
+                )}
+                <div className="flex gap-2">
+                  <input className="input-field flex-1" placeholder="Add custom facet..." value={facetInput} onChange={(e) => setFacetInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addCustomFacet(); } }} />
+                  <button type="button" onClick={addCustomFacet} className="btn-secondary whitespace-nowrap">Add</button>
                 </div>
               </div>
             </div>

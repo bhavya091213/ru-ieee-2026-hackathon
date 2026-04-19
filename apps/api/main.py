@@ -11,6 +11,7 @@ from apps.api.routes.ingest import router as ingest_router
 from apps.api.routes.projects import router as projects_router
 from apps.api.routes.simulate import router as simulate_router
 from apps.api.routes.explore import router as explore_router
+from apps.api.routes.suggest import router as suggest_router
 from apps.api.routes.tribe import router as tribe_router
 
 
@@ -59,6 +60,7 @@ def create_app() -> FastAPI:
     app.include_router(dashboard_router, prefix="/api")
     app.include_router(tribe_router, prefix="/api")
     app.include_router(explore_router, prefix="/api")
+    app.include_router(suggest_router, prefix="/api")
 
     return app
 

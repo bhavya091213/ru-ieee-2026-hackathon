@@ -43,8 +43,8 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
         const pid = createResult.data.project_id;
 
         setPhase("ingesting");
-        const sources = project.seedUrls.length > 0 ? project.seedUrls : ["mock://consumer-electronics"];
-        await startIngest(pid, sources);
+        const sources = project.seedUrls.length > 0 ? project.seedUrls : [];
+        await startIngest(pid, sources, project.productName);
 
         setPhase("simulating");
         await runSimulation(pid, project.productName, project.description, project.hypotheses, project.facets);
