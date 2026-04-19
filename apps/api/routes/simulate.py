@@ -38,6 +38,11 @@ async def _run_simulation_task(
     from core.simulation.orchestrator import SimulationState, run_simulation
     from core.simulation.rounds import retrieve_phase, round1_phase, round2_phase
 
+    def log(msg: str) -> None:
+        logs = getattr(app_state, "progress_logs", None)
+        if isinstance(logs, dict):
+            logs.setdefault(project_id, []).append(msg)
+
     try:
         import config as _config
 
@@ -57,9 +62,9 @@ async def _run_simulation_task(
                 chunks_for_clustering.append({
                     "id": c["chunk_id"],
                     "text": c["text"],
-                    "facet": meta.get("source_type", "other"),
-                    "stance": "review",
-                    "entity_ids": [],
+                    "facet": meta.get("facet", meta.get("source_type", "other")),
+                    "stance": meta.get("stance", "review"),
+                    "entity_ids": meta.get("entity_ids", []) if isinstance(meta.get("entity_ids"), list) else [],
                 })
 
         if not chunks_for_clustering:
@@ -74,12 +79,15 @@ async def _run_simulation_task(
         from core.personas.cluster import cluster_chunks
         from core.personas.synthesize import synthesize_personas
 
+        log(f"Clustering {len(chunks_for_clustering)} chunks into persona groups...")
         app_state.sim_status[project_id] = {
             "phase": "CLUSTERING", "error": None, "done": False
         }
         target = (3, min(6, max(3, len(chunks_for_clustering) // 3)))
         clusters = await cluster_chunks(chunks_for_clustering, target_range=target)
+        log(f"Found {len(clusters)} persona clusters")
 
+        log("Synthesizing persona profiles with AI...")
         app_state.sim_status[project_id] = {
             "phase": "SYNTHESIZING", "error": None, "done": False
         }
@@ -110,6 +118,9 @@ async def _run_simulation_task(
                 for i in range(3)
             ]
 
+        labels = [p.segment_label for p in personas]
+        log(f"Created {len(personas)} personas: {', '.join(labels)}")
+
         chunk_summaries = [
             c["text"][:120] for c in chunks_for_clustering[:15]
         ]
@@ -132,11 +143,21 @@ async def _run_simulation_task(
             result = await score_tribe(state.round2_responses, state.scenario)
             return state.transition(tribe_result=result, phase=SimPhase.DONE)
 
+        phase_messages = {
+            "RETRIEVING": "Retrieving evidence for each persona...",
+            "ROUND1": "Round 1 — personas sharing initial reactions...",
+            "MODERATING": "Moderator analyzing disagreements...",
+            "ROUND2": "Round 2 — personas responding to challenges...",
+            "ANALYZING": "Analyst synthesizing findings...",
+            "SCORING": "Scoring tribe alignment...",
+        }
+
         def _wrap(phase_name: str, func):
             async def wrapped(state: SimulationState) -> SimulationState:
                 app_state.sim_status[project_id] = {
                     "phase": phase_name, "error": None, "done": False
                 }
+                log(phase_messages.get(phase_name, phase_name))
                 return await func(state)
 
             return wrapped
@@ -175,6 +196,7 @@ async def _run_simulation_task(
                 app_state.projects[project_id] = project.model_copy(
                     update={"dashboard": dashboard, "status": "completed"}
                 )
+            log("Study complete — assembling dashboard")
             app_state.sim_status[project_id] = {
                 "phase": "DONE", "error": None, "done": True
             }
@@ -231,3 +253,9 @@ async def simulate_status(project_id: str, request: Request):
     if status is None:
         return {"phase": "IDLE", "error": None, "done": False}
     return status
+
+
+@router.get("/projects/{project_id}/progress")
+async def get_progress(project_id: str, request: Request, after: int = 0):
+    logs: list[str] = getattr(request.app.state, "progress_logs", {}).get(project_id, [])
+    return {"messages": logs[after:]}

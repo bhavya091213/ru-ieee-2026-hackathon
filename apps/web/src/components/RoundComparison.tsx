@@ -8,23 +8,23 @@ interface RoundComparisonProps {
 export function RoundComparison({ round1, round2 }: RoundComparisonProps) {
   if (!round1 || !round2) {
     return (
-      <div className="border border-[var(--color-surface-border)] bg-[var(--color-bg-deep)] p-4 text-sm text-[var(--color-text-faint)] rounded-lg">
+      <div className="rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[rgba(0,0,0,0.02)] p-4 text-sm text-[rgba(0,0,0,0.4)]">
         No round comparison available.
       </div>
     );
   }
 
   const delta = round2.adoption_likelihood_0_100 - round1.adoption_likelihood_0_100;
-  const deltaColor = delta > 0 ? "text-[var(--color-vgreen)]" : delta < 0 ? "text-[var(--color-vred)]" : "text-[var(--color-text-dim)]";
+  const deltaTone = delta > 0 ? "text-emerald-600" : delta < 0 ? "text-[#FA3D1D]" : "text-[rgba(0,0,0,0.45)]";
 
   return (
-    <div className="border border-[var(--color-surface-border)] bg-[var(--color-bg-deep)] p-4 rounded-lg">
-      <p className="mb-3 text-xs font-bold uppercase tracking-wider text-[var(--color-text-faint)]">Round Comparison</p>
+    <div className="rounded-2xl border border-[rgba(0,0,0,0.06)] p-4">
+      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.35)]">Round Comparison</p>
       <div className="flex items-center justify-between text-sm">
-        <span className="text-[var(--color-text-dim)]">R1: {round1.adoption_likelihood_0_100}%</span>
-        <span className="text-[var(--color-text-dim)]">R2: {round2.adoption_likelihood_0_100}%</span>
+        <span className="text-[rgba(0,0,0,0.6)]">R1: {round1.adoption_likelihood_0_100}%</span>
+        <span className="text-[rgba(0,0,0,0.6)]">R2: {round2.adoption_likelihood_0_100}%</span>
       </div>
-      <p className={`mt-2 text-sm font-bold ${deltaColor}`}>
+      <p className={`mt-2 font-[family-name:var(--font-display)] text-lg font-light ${deltaTone}`}>
         {delta > 0 ? "+" : ""}{delta} points
       </p>
     </div>

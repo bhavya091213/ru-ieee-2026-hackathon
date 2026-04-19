@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import { AnimatedBackground } from "./components/AnimatedBackground";
 import { LandingPage } from "./pages/LandingPage";
 import { WizardPage } from "./pages/WizardPage";
 import { SimulationPage } from "./pages/SimulationPage";
@@ -36,25 +35,33 @@ export default function App() {
     setPage("landing");
   };
 
-  let content: React.ReactNode;
-
   if (page === "wizard") {
-    content = (
+    return (
       <WizardPage
-        onSubmit={(ctx) => { setProject(ctx); setPage("simulation"); }}
+        onSubmit={(ctx) => {
+          setProject(ctx);
+          setPage("simulation");
+        }}
         onBack={reset}
       />
     );
-  } else if (page === "simulation") {
-    content = (
+  }
+
+  if (page === "simulation") {
+    return (
       <SimulationPage
         project={project}
-        onComplete={(projectId) => { setProject((p) => ({ ...p, projectId })); setPage("dashboard"); }}
+        onComplete={(projectId) => {
+          setProject((p) => ({ ...p, projectId }));
+          setPage("dashboard");
+        }}
         onError={reset}
       />
     );
-  } else if (page === "explore") {
-    content = (
+  }
+
+  if (page === "explore") {
+    return (
       <ExplorePage
         projectId={project.projectId}
         productName={project.productName}
@@ -62,8 +69,10 @@ export default function App() {
         onBack={() => setPage("dashboard")}
       />
     );
-  } else if (page === "dashboard") {
-    content = (
+  }
+
+  if (page === "dashboard") {
+    return (
       <DashboardPage
         projectId={project.projectId}
         productName={project.productName}
@@ -71,14 +80,11 @@ export default function App() {
         onExplore={() => setPage("explore")}
       />
     );
-  } else {
-    content = <LandingPage onStart={() => setPage("wizard")} />;
   }
 
   return (
-    <>
-      <AnimatedBackground />
-      <div className="relative z-10">{content}</div>
-    </>
+    <div className="grain-overlay">
+      <LandingPage onStart={() => setPage("wizard")} />
+    </div>
   );
 }

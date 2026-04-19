@@ -1,19 +1,19 @@
 const PERSONA_COLORS = [
-  "bg-[var(--color-vgreen)]/15 text-[var(--color-vgreen)]",
-  "bg-[var(--color-vyellow)]/15 text-[var(--color-vyellow)]",
-  "bg-[var(--color-vcyan)]/15 text-[var(--color-vcyan)]",
-  "bg-[var(--color-vred)]/15 text-[var(--color-vred)]",
-  "bg-[var(--color-vpurple)]/15 text-[var(--color-vpurple)]",
-  "bg-emerald-500/15 text-emerald-400",
+  "bg-[#0358F7]/10 text-[#0358F7]",
+  "bg-[#FFB005]/10 text-[#B87A00]",
+  "bg-[#C679C4]/15 text-[#9B4E99]",
+  "bg-[#FA3D1D]/10 text-[#D42E11]",
+  "bg-[#5092C7]/15 text-[#3A6F9A]",
+  "bg-[#FD02F5]/10 text-[#C502C0]",
 ] as const;
 
-const DOT_COLORS = [
-  "bg-[var(--color-vgreen)]",
-  "bg-[var(--color-vyellow)]",
-  "bg-[var(--color-vcyan)]",
-  "bg-[var(--color-vred)]",
-  "bg-[var(--color-vpurple)]",
-  "bg-emerald-400",
+const PERSONA_DOT_COLORS = [
+  "bg-[#0358F7]",
+  "bg-[#FFB005]",
+  "bg-[#C679C4]",
+  "bg-[#FA3D1D]",
+  "bg-[#5092C7]",
+  "bg-[#FD02F5]",
 ] as const;
 
 export function getPersonaColor(personaId: string): string {
@@ -23,12 +23,12 @@ export function getPersonaColor(personaId: string): string {
 
 export function getPersonaDot(personaId: string): string {
   const hash = [...personaId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
-  return DOT_COLORS[hash % DOT_COLORS.length];
+  return PERSONA_DOT_COLORS[hash % PERSONA_DOT_COLORS.length];
 }
 
 export const sentimentClasses: Record<string, string> = {
-  positive: "border-[var(--color-vgreen)]/30 bg-[var(--color-vgreen)]/10 text-[var(--color-vgreen)]",
-  mixed: "border-[var(--color-vyellow)]/30 bg-[var(--color-vyellow)]/10 text-[var(--color-vyellow)]",
-  negative: "border-[var(--color-vred)]/30 bg-[var(--color-vred)]/10 text-[var(--color-vred)]",
-  neutral: "border-[var(--color-surface-border)] bg-[var(--color-surface)]/50 text-[var(--color-text-dim)]",
+  positive: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  mixed: "border-[#FFB005]/20 bg-[#FFB005]/8 text-[#9A6B00]",
+  negative: "border-[#FA3D1D]/20 bg-[#FA3D1D]/8 text-[#D42E11]",
+  neutral: "border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.45)]",
 };

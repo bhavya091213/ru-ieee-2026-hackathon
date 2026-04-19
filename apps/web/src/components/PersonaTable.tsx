@@ -19,68 +19,68 @@ export function PersonaTable({ personas, round1Responses, round2Responses }: Per
   );
 
   return (
-    <div className="card p-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="card-dia p-6">
+      <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="font-[family-name:var(--font-display)] text-lg font-bold uppercase text-[var(--color-text)]">Personas</h2>
-          <p className="mt-0.5 text-xs text-[var(--color-text-faint)]">Click a row to expand details.</p>
+          <h2 className="font-[family-name:var(--font-display)] text-lg font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Personas</h2>
+          <p className="mt-0.5 text-sm text-[rgba(0,0,0,0.45)]">Click a row to expand details and round comparison.</p>
         </div>
-        <button type="button" onClick={() => setSortDesc((v) => !v)} className="btn-secondary text-xs">
+        <button type="button" onClick={() => setSortDesc((v) => !v)} className="rounded-full border border-[rgba(0,0,0,0.1)] px-3 py-1.5 text-xs font-medium text-[rgba(0,0,0,0.6)] transition hover:bg-[rgba(0,0,0,0.04)]">
           Sort {sortDesc ? "\u2193" : "\u2191"}
         </button>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-3">
         {sorted.map((p) => {
           const expanded = expandedId === p.persona_id;
           const r1 = round1Responses.find((r) => r.persona_id === p.persona_id);
           const r2 = round2Responses.find((r) => r.persona_id === p.persona_id);
 
           return (
-            <div key={p.persona_id} className={`border transition ${expanded ? "border-[var(--color-vgreen)]/30 bg-[var(--color-vgreen)]/5" : "border-[var(--color-surface-border)] hover:border-[var(--color-vgreen)]/20"} rounded-lg`}>
+            <div key={p.persona_id} className={`rounded-2xl border transition ${expanded ? "border-[rgba(0,0,0,0.15)] bg-[rgba(0,0,0,0.02)]" : "border-[rgba(0,0,0,0.06)] hover:border-[rgba(0,0,0,0.12)]"}`}>
               <button type="button" onClick={() => setExpandedId(expanded ? null : p.persona_id)} className="w-full p-4 text-left">
                 <div className="grid gap-3 sm:grid-cols-[1.3fr_0.8fr_1fr_1fr]">
                   <div className="flex items-start gap-2.5">
                     <span className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${getPersonaDot(p.persona_id)}`} />
                     <div>
-                      <p className="font-semibold text-[var(--color-text)]">{p.segment_label}</p>
-                      <p className="mt-0.5 text-xs text-[var(--color-text-dim)] line-clamp-1">{p.summary}</p>
+                      <p className="font-medium text-[rgba(0,0,0,0.85)]">{p.segment_label}</p>
+                      <p className="mt-0.5 text-sm text-[rgba(0,0,0,0.45)] line-clamp-1">{p.summary}</p>
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-faint)]">Adoption</p>
+                    <p className="font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.35)]">Adoption</p>
                     <div className="mt-1.5 flex items-center gap-2">
-                      <div className="h-1.5 flex-1 rounded-full bg-[var(--color-bg-deep)]">
-                        <div className="h-1.5 rounded-full bg-[var(--color-vgreen)]" style={{ width: `${p.adoption_likelihood}%` }} />
+                      <div className="h-1.5 flex-1 rounded-full bg-[rgba(0,0,0,0.06)]">
+                        <div className="h-1.5 rounded-full bg-[rgba(0,0,0,0.6)]" style={{ width: `${p.adoption_likelihood}%` }} />
                       </div>
-                      <span className="text-sm font-bold text-[var(--color-vgreen)]">{p.adoption_likelihood}%</span>
+                      <span className="text-sm font-semibold text-[rgba(0,0,0,0.7)]">{p.adoption_likelihood}%</span>
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-faint)]">Positive</p>
-                    <p className="mt-1 text-sm text-[var(--color-text-dim)]">{p.strongest_positive}</p>
+                    <p className="font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.35)]">Positive</p>
+                    <p className="mt-1 text-sm text-[rgba(0,0,0,0.6)]">{p.strongest_positive}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-faint)]">Concern</p>
-                    <p className="mt-1 text-sm text-[var(--color-text-dim)]">{p.strongest_concern}</p>
+                    <p className="font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.35)]">Concern</p>
+                    <p className="mt-1 text-sm text-[rgba(0,0,0,0.6)]">{p.strongest_concern}</p>
                   </div>
                 </div>
               </button>
 
               {expanded && (
-                <div className="border-t border-[var(--color-surface-border)] p-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
+                <div className="border-t border-[rgba(0,0,0,0.06)] p-5">
+                  <div className="grid gap-5 sm:grid-cols-2">
                     <div>
-                      <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--color-text-faint)]">Feature Priorities</p>
-                      <div className="space-y-2">
+                      <p className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.35)]">Feature Priorities</p>
+                      <div className="space-y-2.5">
                         {Object.entries(p.feature_priorities).map(([facet, score]) => (
                           <div key={facet}>
                             <div className="flex justify-between text-sm">
-                              <span className="capitalize text-[var(--color-text-dim)]">{facet}</span>
-                              <span className="font-bold text-[var(--color-vyellow)]">{Math.round(score * 100)}%</span>
+                              <span className="capitalize text-[rgba(0,0,0,0.6)]">{facet}</span>
+                              <span className="font-medium text-[rgba(0,0,0,0.8)]">{Math.round(score * 100)}%</span>
                             </div>
-                            <div className="mt-1 h-1.5 rounded-full bg-[var(--color-bg-deep)]">
-                              <div className="h-1.5 rounded-full bg-[var(--color-vyellow)]" style={{ width: `${Math.round(score * 100)}%` }} />
+                            <div className="mt-1 h-1.5 rounded-full bg-[rgba(0,0,0,0.06)]">
+                              <div className="h-1.5 rounded-full bg-[#FFB005]" style={{ width: `${Math.round(score * 100)}%` }} />
                             </div>
                           </div>
                         ))}

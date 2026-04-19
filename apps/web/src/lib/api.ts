@@ -130,6 +130,17 @@ export function scoreTribe(
   );
 }
 
+export async function fetchProgressLogs(
+  projectId: string,
+  after: number = 0,
+): Promise<ApiResult<{ messages: string[] }>> {
+  return fetchWithFallback(
+    `/api/projects/${projectId}/progress?after=${after}`,
+    { method: "GET" },
+    { messages: [] },
+  );
+}
+
 export function suggestFacets(
   productName: string,
   description: string = "",

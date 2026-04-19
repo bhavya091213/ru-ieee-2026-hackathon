@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import { useState } from "react";
 import { ConsensusChart } from "../components/ConsensusChart";
 import { DisagreementRadar } from "../components/DisagreementRadar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
@@ -23,32 +22,13 @@ type Tab = (typeof TABS)[number];
 export function DashboardPage({ projectId, productName, onNewStudy, onExplore }: DashboardPageProps) {
   const { data, dataSource, loading } = useDashboard(projectId);
   const [tab, setTab] = useState<Tab>("Overview");
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el || !data) return;
-
-    const cards = el.querySelectorAll("[data-reveal]");
-    if (cards.length === 0) return;
-
-    gsap.set(cards, { opacity: 0, y: 24 });
-    gsap.to(cards, {
-      opacity: 1,
-      y: 0,
-      duration: 0.45,
-      stagger: 0.08,
-      ease: "power2.out",
-      delay: 0.05,
-    });
-  }, [tab, data]);
 
   if (loading && !data) {
     return (
       <main className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[var(--color-surface-border)] border-t-[var(--color-vgreen)]" />
-          <p className="mt-3 text-sm text-[var(--color-text-dim)]">Loading dashboard...</p>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[rgba(0,0,0,0.1)] border-t-[rgba(0,0,0,0.7)]" />
+          <p className="mt-3 text-sm text-[rgba(0,0,0,0.45)]">Loading dashboard...</p>
         </div>
       </main>
     );
@@ -58,7 +38,7 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
     return (
       <main className="flex min-h-screen items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-[var(--color-text-dim)]">No dashboard data available.</p>
+          <p className="text-[rgba(0,0,0,0.5)]">No dashboard data available.</p>
           <button type="button" onClick={onNewStudy} className="btn-primary mt-4">Start New Study</button>
         </div>
       </main>
@@ -67,21 +47,22 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
 
   return (
     <main className="min-h-screen">
-      <header className="border-b border-[var(--color-surface-border)] bg-[var(--color-surface)]">
+      {/* Glassmorphism Header */}
+      <header className="glass-header sticky top-0 z-50 border-b border-[rgba(0,0,0,0.06)]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <div>
             <div className="flex items-center gap-3">
-              <span className="font-[family-name:var(--font-display)] text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-vgreen)]">PanelForge</span>
+              <span className="font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-[0.15em] text-[rgba(0,0,0,0.5)]">PanelForge</span>
               {dataSource === "mock" && (
-                <span className="border border-[var(--color-vyellow)]/30 bg-[var(--color-vyellow)]/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-[var(--color-vyellow)]">
-                  Mock
+                <span className="rounded-full bg-[#FFB005]/12 px-2.5 py-0.5 text-xs font-medium text-[#9A6B00]">
+                  Mock Data
                 </span>
               )}
             </div>
-            <h1 className="mt-1 font-[family-name:var(--font-display)] text-lg font-bold uppercase text-[var(--color-text)]">
+            <h1 className="mt-1 font-[family-name:var(--font-display)] text-xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">
               {productName || "Focus Group Dashboard"}
             </h1>
-            <div className="mt-1 flex gap-4 text-xs text-[var(--color-text-faint)]">
+            <div className="mt-1 flex gap-4 text-xs text-[rgba(0,0,0,0.35)]">
               <span>{data.personas.length} personas</span>
               <span>2 rounds</span>
               <span>{data.tribe?.enabled ? "TRIBE active" : "TRIBE off"}</span>
@@ -89,23 +70,30 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
           </div>
           <div className="flex gap-2">
             {onExplore && (
-              <button type="button" onClick={onExplore} className="border border-[var(--color-vcyan)]/30 bg-[var(--color-vcyan)]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[var(--color-vcyan)] transition hover:bg-[var(--color-vcyan)]/20">
+              <button type="button" onClick={onExplore} className="rounded-full bg-[rgba(0,0,0,0.06)] px-4 py-2 text-sm font-medium text-[rgba(0,0,0,0.7)] transition hover:bg-[rgba(0,0,0,0.1)]">
                 Explore Data
               </button>
             )}
-            <button type="button" onClick={onNewStudy} className="btn-secondary text-sm">New Study</button>
+            <button type="button" onClick={onNewStudy} className="btn-secondary text-sm">
+              New Study
+            </button>
           </div>
         </div>
 
+        {/* Tabs */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <nav className="-mb-px flex gap-6">
+          <nav className="-mb-px flex gap-8">
             {TABS.map((t) => (
-              <button key={t} type="button" onClick={() => setTab(t)}
-                className={`border-b-2 pb-3 pt-1 text-sm font-semibold uppercase tracking-wider transition ${
+              <button
+                key={t}
+                type="button"
+                onClick={() => setTab(t)}
+                className={`border-b-2 pb-3 pt-1 text-sm font-medium transition ${
                   tab === t
-                    ? "border-[var(--color-vgreen)] text-[var(--color-vgreen)]"
-                    : "border-transparent text-[var(--color-text-faint)] hover:text-[var(--color-text-dim)]"
-                }`}>
+                    ? "border-[rgba(0,0,0,0.85)] text-[rgba(0,0,0,0.85)]"
+                    : "border-transparent text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.6)]"
+                }`}
+              >
                 {t}
               </button>
             ))}
@@ -113,64 +101,99 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
         </div>
       </header>
 
-      <div ref={contentRef} className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      {/* Content */}
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {tab === "Overview" && (
-          <div className="space-y-6">
-            <div data-reveal><KPICards consensus={data.consensus_score} disagreement={data.disagreement_score} evidenceCoverage={data.evidence_coverage} /></div>
+          <div className="animate-fade-in space-y-6">
+            <KPICards
+              consensus={data.consensus_score}
+              disagreement={data.disagreement_score}
+              evidenceCoverage={data.evidence_coverage}
+            />
             <div className="grid gap-6 lg:grid-cols-2">
-              <div data-reveal><ErrorBoundary><ConsensusChart featureScores={data.feature_scores} /></ErrorBoundary></div>
-              <div data-reveal><ErrorBoundary><DisagreementRadar featureScores={data.feature_scores} /></ErrorBoundary></div>
+              <ErrorBoundary>
+                <ConsensusChart featureScores={data.feature_scores} />
+              </ErrorBoundary>
+              <ErrorBoundary>
+                <DisagreementRadar featureScores={data.feature_scores} />
+              </ErrorBoundary>
             </div>
-            <div data-reveal><TribePanel tribe={data.tribe} /></div>
+            <TribePanel tribe={data.tribe} />
           </div>
         )}
 
         {tab === "Personas" && (
-          <div data-reveal>
-            <PersonaTable personas={data.personas} round1Responses={data.round1_responses} round2Responses={data.round2_responses} />
+          <div className="animate-fade-in space-y-6">
+            <PersonaTable
+              personas={data.personas}
+              round1Responses={data.round1_responses}
+              round2Responses={data.round2_responses}
+            />
           </div>
         )}
 
         {tab === "Evidence" && (
-          <div className="space-y-6">
-            <div data-reveal><ErrorBoundary><FeatureHeatmap featureScores={data.feature_scores} personas={data.personas} /></ErrorBoundary></div>
-            <div data-reveal><QuoteWall quotes={data.quotes} /></div>
+          <div className="animate-fade-in space-y-6">
+            <ErrorBoundary>
+              <FeatureHeatmap featureScores={data.feature_scores} personas={data.personas} />
+            </ErrorBoundary>
+            <QuoteWall quotes={data.quotes} />
           </div>
         )}
 
         {tab === "Insights" && (
-          <div className="space-y-6">
-            <div data-reveal className="card p-6">
-              <h2 className="font-[family-name:var(--font-display)] text-lg font-bold uppercase text-[var(--color-text)]">Analyst Summary</h2>
-              <div className="mt-4 grid gap-6 md:grid-cols-2">
+          <div className="animate-fade-in space-y-6">
+            <div className="card-dia p-7">
+              <h2 className="font-[family-name:var(--font-display)] text-xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Analyst Summary</h2>
+              <div className="mt-6 grid gap-8 md:grid-cols-2">
                 <div>
-                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--color-vgreen)]">Consensus Themes</h3>
-                  <ul className="space-y-1.5">{data.analyst_summary.consensus_themes.map((t) => <li key={t} className="text-sm text-[var(--color-text-dim)]">{t}</li>)}</ul>
+                  <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-emerald-600">Consensus Themes</h3>
+                  <ul className="space-y-2">
+                    {data.analyst_summary.consensus_themes.map((t) => (
+                      <li key={t} className="text-[0.9375rem] leading-relaxed text-[rgba(0,0,0,0.6)]">{t}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div>
-                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--color-vyellow)]">Disagreement</h3>
-                  <ul className="space-y-1.5">{data.analyst_summary.disagreement_themes.map((t) => <li key={t} className="text-sm text-[var(--color-text-dim)]">{t}</li>)}</ul>
+                  <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[#FFB005]">Disagreement Themes</h3>
+                  <ul className="space-y-2">
+                    {data.analyst_summary.disagreement_themes.map((t) => (
+                      <li key={t} className="text-[0.9375rem] leading-relaxed text-[rgba(0,0,0,0.6)]">{t}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div>
-                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--color-vred)]">Top Risks</h3>
-                  <ul className="space-y-1.5">{data.analyst_summary.top_risks.map((r) => <li key={r} className="text-sm text-[var(--color-text-dim)]">{r}</li>)}</ul>
+                  <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[#FA3D1D]">Top Risks</h3>
+                  <ul className="space-y-2">
+                    {data.analyst_summary.top_risks.map((r) => (
+                      <li key={r} className="text-[0.9375rem] leading-relaxed text-[rgba(0,0,0,0.6)]">{r}</li>
+                    ))}
+                  </ul>
                 </div>
                 <div>
-                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--color-vcyan)]">Recommendations</h3>
-                  <ul className="space-y-1.5">{data.analyst_summary.feature_recommendations.map((r) => <li key={r} className="text-sm text-[var(--color-text-dim)]">{r}</li>)}</ul>
+                  <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[#0358F7]">Recommendations</h3>
+                  <ul className="space-y-2">
+                    {data.analyst_summary.feature_recommendations.map((r) => (
+                      <li key={r} className="text-[0.9375rem] leading-relaxed text-[rgba(0,0,0,0.6)]">{r}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
               {data.analyst_summary.evidence_gaps.length > 0 && (
-                <div className="mt-6 border border-[var(--color-surface-border)] bg-[var(--color-bg-deep)] p-4">
-                  <h3 className="mb-2 text-xs font-bold uppercase tracking-wider text-[var(--color-text-dim)]">Evidence Gaps</h3>
-                  <ul className="space-y-1">{data.analyst_summary.evidence_gaps.map((g) => <li key={g} className="text-sm text-[var(--color-text-faint)]">{g}</li>)}</ul>
+                <div className="mt-8 rounded-2xl bg-[rgba(0,0,0,0.03)] p-5">
+                  <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.5)]">Evidence Gaps</h3>
+                  <ul className="space-y-1.5">
+                    {data.analyst_summary.evidence_gaps.map((g) => (
+                      <li key={g} className="text-sm text-[rgba(0,0,0,0.45)]">{g}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
             {data.moderator_question && (
-              <div data-reveal className="card p-6">
-                <h2 className="font-[family-name:var(--font-display)] text-lg font-bold uppercase text-[var(--color-text)]">Moderator Follow-Up</h2>
-                <p className="mt-2 italic text-[var(--color-text-dim)]">"{data.moderator_question}"</p>
+              <div className="card-dia p-7">
+                <h2 className="font-[family-name:var(--font-display)] text-xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Moderator Follow-Up</h2>
+                <p className="mt-3 font-[family-name:var(--font-display)] text-lg italic text-[rgba(0,0,0,0.6)]">"{data.moderator_question}"</p>
               </div>
             )}
           </div>

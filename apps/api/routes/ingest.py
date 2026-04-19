@@ -23,10 +23,18 @@ def _slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_") or "product"
 
 
+def _progress(app_state, project_id: str, msg: str) -> None:
+    logs: list = getattr(app_state, "progress_logs", None) or {}
+    if isinstance(logs, dict):
+        logs.setdefault(project_id, []).append(msg)
+
+
 async def _ingest_sources(
     sources: list[str],
     canonical_product: str,
     data_dir: str,
+    app_state=None,
+    project_id: str = "",
 ) -> dict:
     from core.indexing.chroma_store import VectorStore
     from core.indexing.chunk import chunk_documents
@@ -66,14 +74,17 @@ async def _ingest_sources(
 
         logger.info("No URLs provided — auto-found: %s", sources)
 
-    logger.info("=== INGEST START: product=%s, sources=%s ===", canonical_product, sources)
+    def log(msg: str) -> None:
+        _progress(app_state, project_id, msg)
+        logger.info(msg)
+
+    log(f"Starting ingest for \"{canonical_product}\" — {len(sources)} source(s)")
 
     doc_count = 0
-    for url in sources:
+    for idx, url in enumerate(sources):
         url = url.strip()
         if not url:
             continue
-        logger.info("Processing source: %s (type will be detected)", url)
 
         source_type = "web_article"
         if "reddit.com" in url:
@@ -81,10 +92,13 @@ async def _ingest_sources(
         elif "youtube.com" in url or "youtu.be" in url:
             source_type = "youtube"
 
+        label = f"[{idx + 1}/{len(sources)}]"
+
         if source_type == "youtube":
             try:
                 from core.ingest.youtube import fetch_youtube
 
+                log(f"{label} Fetching YouTube transcript...")
                 results = await asyncio.to_thread(fetch_youtube, [url], f"{data_dir}/raw")
                 for r in results:
                     write_markdown(
@@ -100,8 +114,9 @@ async def _ingest_sources(
                         source_type="youtube",
                     )
                     doc_count += 1
+                log(f"{label} YouTube: got {len(results)} transcript(s)")
             except Exception as exc:
-                logger.warning("YouTube fetch failed for %s: %s", url, exc)
+                log(f"{label} YouTube fetch failed: {exc}")
         elif source_type == "reddit_post":
             try:
                 from core.ingest.reddit import fetch_reddit
@@ -111,12 +126,21 @@ async def _ingest_sources(
                 if len(parts) > 1:
                     subreddit = parts[1].split("/")[0]
 
+                log(f"{label} Scraping r/{subreddit}...")
                 results = await asyncio.to_thread(
                     fetch_reddit, subreddit, canonical_product, 10, f"{data_dir}/raw"
                 )
+                posts = [r for r in results if r.get("source_type") == "reddit_post"]
+                comments = [r for r in results if r.get("source_type") == "reddit_comment"]
+                log(f"{label} Found {len(posts)} posts, {len(comments)} comments in r/{subreddit}")
+
+                written = 0
                 for r in results:
+                    text = r.get("text", "")
+                    if not text or not text.strip():
+                        continue
                     write_markdown(
-                        text=r.get("text", ""),
+                        text=text,
                         metadata={
                             "title": r.get("title", r.get("parent_post_title", "")),
                             "author": r.get("author", "anonymous"),
@@ -128,10 +152,14 @@ async def _ingest_sources(
                         source_type=r.get("source_type", "reddit_post"),
                     )
                     doc_count += 1
+                    written += 1
+                log(f"{label} Saved {written} documents from Reddit")
             except Exception as exc:
-                logger.warning("Reddit fetch failed for %s: %s", url, exc)
+                log(f"{label} Reddit fetch failed: {exc}")
+                logger.error("Reddit fetch FAILED for %s: %s", url, exc, exc_info=True)
         else:
             try:
+                log(f"{label} Fetching web article...")
                 raw_doc = await asyncio.to_thread(fetch_url, url, canonical_product)
                 if raw_doc:
                     write_markdown(
@@ -147,30 +175,43 @@ async def _ingest_sources(
                         source_type="web_article",
                     )
                     doc_count += 1
+                    log(f"{label} Saved \"{raw_doc.title[:60]}\"")
+                else:
+                    log(f"{label} No content extracted from {url}")
             except Exception as exc:
-                logger.warning("Web fetch failed for %s: %s", url, exc)
+                log(f"{label} Web fetch failed: {exc}")
 
-    logger.info("Fetching complete: %d documents written to data/md/", doc_count)
+    log(f"Fetching complete — {doc_count} documents total")
 
     md_dir = f"{data_dir}/md"
     chunks_path = f"{data_dir}/chunks/{canonical_product}.jsonl"
 
-    md_files = [f for f in os.listdir(md_dir) if f.endswith(".md")]
-    logger.info("MD files in %s: %s", md_dir, md_files)
-
+    log("Chunking documents into ~500-word segments...")
     chunks = await asyncio.to_thread(
         chunk_documents, md_dir, chunks_path, canonical_product
     )
-    logger.info("Chunking complete: %d chunks -> %s", len(chunks), chunks_path)
+    log(f"Created {len(chunks)} chunks")
 
     if not chunks:
-        logger.warning("No chunks produced for product=%s. Check canonical_product in MD frontmatter.", canonical_product)
+        log("No chunks produced — check that seed URLs contain relevant content")
         return {"source_count": doc_count, "chunk_count": 0}
 
+    from core.indexing.local_enrich import build_pseudo_graph, enrich_chunks
+
+    log("Classifying facets and stances...")
+    chunks = enrich_chunks(chunks)
+    facet_counts = {}
+    for c in chunks:
+        f = c.get("facet", "other")
+        facet_counts[f] = facet_counts.get(f, 0) + 1
+    top_facets = sorted(facet_counts, key=facet_counts.get, reverse=True)[:5]  # type: ignore[arg-type]
+    log(f"Top facets: {', '.join(f'{f} ({facet_counts[f]})' for f in top_facets)}")
+
     import config as _config
-    from google import genai
 
     settings = _config.get_settings()
+
+    log(f"Generating embeddings for {len(chunks)} chunks...")
     embedder = GeminiEmbedder(api_key=settings.GEMINI_API_KEY)
     store = VectorStore(
         embedder=embedder,
@@ -178,36 +219,15 @@ async def _ingest_sources(
         collection_name=canonical_product,
     )
     await asyncio.to_thread(store.add_chunks, chunks)
-    logger.info("Embedding + ChromaDB complete: %d chunks stored in collection=%s", len(chunks), canonical_product)
+    log(f"Stored {len(chunks)} vectors in ChromaDB")
 
-    entity_count = 0
-    community_count = 0
-    try:
-        from core.indexing.graph_builder import run_extraction_pipeline
+    log("Building topic graph...")
+    graph_stats = await asyncio.to_thread(build_pseudo_graph, chunks, data_dir)
+    entity_count = graph_stats["entity_count"]
+    community_count = graph_stats["community_count"]
+    log(f"Graph: {entity_count} entities, {community_count} communities")
 
-        client = genai.Client(api_key=settings.GEMINI_API_KEY)
-        graph = await asyncio.to_thread(
-            run_extraction_pipeline,
-            Path(chunks_path),
-            Path(data_dir),
-            client,
-            None,
-            canonical_product,
-        )
-        entity_count = len(graph.nodes) if graph else 0
-
-        if graph and len(graph.nodes) > 1:
-            from core.indexing.communities import detect_communities
-            from core.indexing.graph_parquet import export_parquet
-
-            await asyncio.to_thread(export_parquet, graph, chunks, f"{data_dir}/graph")
-            result = await asyncio.to_thread(
-                detect_communities, graph, f"{data_dir}/graph", client
-            )
-            community_count = result.get("num_communities", {}).get("1.0", 0)
-    except Exception as exc:
-        logger.warning("Graph extraction/community detection failed: %s", exc)
-
+    log("Ingest complete")
     return {
         "source_count": doc_count,
         "chunk_count": len(chunks),
@@ -225,8 +245,15 @@ async def ingest(project_id: str, body: IngestRequest, request: Request):
     canonical = _slugify(body.product_name or project.name)
     data_dir = str(Path("data") / "projects" / project_id)
 
+    if not hasattr(request.app.state, "progress_logs"):
+        request.app.state.progress_logs = {}
+    request.app.state.progress_logs[project_id] = []
+
     try:
-        result = await _ingest_sources(body.sources, canonical, data_dir)
+        result = await _ingest_sources(
+            body.sources, canonical, data_dir,
+            app_state=request.app.state, project_id=project_id,
+        )
     except Exception as exc:
         import traceback
         traceback.print_exc()

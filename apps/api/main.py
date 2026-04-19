@@ -25,6 +25,7 @@ async def lifespan(app: FastAPI):
     app.state.running_sims = set()
     app.state.tasks = {}
     app.state.project_products = {}
+    app.state.progress_logs: dict[str, list[str]] = {}
 
     yield
 

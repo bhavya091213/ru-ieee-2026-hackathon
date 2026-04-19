@@ -237,12 +237,20 @@ def run_extraction_pipeline(
             if line.strip():
                 chunks.append(json.loads(line))
 
+    MAX_EXTRACT = 20
+    if len(chunks) > MAX_EXTRACT:
+        import random
+        logger.info("Sampling %d/%d chunks for graph extraction (cost control)", MAX_EXTRACT, len(chunks))
+        sampled = random.sample(chunks, MAX_EXTRACT)
+    else:
+        sampled = chunks
+
     # Extract each chunk
     extractions = []
     metadata_updates = {}
     enriched_chunks = []
 
-    for chunk in chunks:
+    for chunk in sampled:
         chunk_id = chunk['chunk_id']
         extraction = extract_chunk(
             chunk_id=chunk_id,
@@ -276,12 +284,15 @@ def run_extraction_pipeline(
     # Build graph
     graph = build_graph(extractions)
 
-    # Write enriched JSONL
-    product_name = chunks_jsonl_path.stem  # e.g., "iphone_18"
+    # Write enriched JSONL — include all original chunks, enriched where available
+    enriched_ids = {c["chunk_id"] for c in enriched_chunks}
+    all_enriched = enriched_chunks + [c for c in chunks if c["chunk_id"] not in enriched_ids]
+
+    product_name = chunks_jsonl_path.stem
     enriched_path = output_dir / "chunks" / f"{product_name}_enriched.jsonl"
     enriched_path.parent.mkdir(parents=True, exist_ok=True)
     with open(enriched_path, 'w') as f:
-        for chunk in enriched_chunks:
+        for chunk in all_enriched:
             f.write(json.dumps(chunk) + '\n')
 
     # Update ChromaDB metadata

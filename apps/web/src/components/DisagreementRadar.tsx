@@ -12,15 +12,15 @@ export function DisagreementRadar({ featureScores }: DisagreementRadarProps) {
   }));
 
   return (
-    <div className="card p-6">
-      <h2 className="font-[family-name:var(--font-display)] text-lg font-bold uppercase text-[var(--color-text)]">Disagreement Radar</h2>
-      <p className="mt-1 text-xs text-[var(--color-text-faint)]">Feature-level variance across personas</p>
-      <div className="mt-4 h-64">
+    <div className="card-dia p-6">
+      <h2 className="font-[family-name:var(--font-display)] text-lg font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Disagreement Radar</h2>
+      <p className="mt-1 text-sm text-[rgba(0,0,0,0.45)]">Feature-level variance across personas</p>
+      <div className="mt-5 h-64">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data}>
-            <PolarGrid stroke="var(--color-surface-border)" />
-            <PolarAngleAxis dataKey="facet" tick={{ fill: "var(--color-text-dim)", fontSize: 12 }} />
-            <Radar dataKey="disagreement" fill="var(--color-vyellow)" fillOpacity={0.25} stroke="var(--color-vyellow)" strokeWidth={2} />
+            <PolarGrid stroke="rgba(0,0,0,0.08)" />
+            <PolarAngleAxis dataKey="facet" tick={{ fill: 'rgba(0,0,0,0.5)', fontSize: 12 }} />
+            <Radar dataKey="disagreement" fill="#FFB005" fillOpacity={0.2} stroke="#FFB005" strokeWidth={2} />
           </RadarChart>
         </ResponsiveContainer>
       </div>
