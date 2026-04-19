@@ -16,6 +16,7 @@ async def retrieve_for_persona(
     project_id: str,
     top_k: int = 10,
     collection_name: str | None = None,
+    data_dir: str | None = None,
 ) -> list[RetrievalResult]:
     import asyncio
 
@@ -25,7 +26,8 @@ async def retrieve_for_persona(
 
     settings = _config.get_settings()
 
-    data_dir = str(Path("data"))
+    if data_dir is None:
+        data_dir = str(Path("data") / "projects" / project_id)
     persist_dir = f"{data_dir}/chroma"
 
     coll_name = collection_name or _guess_collection(persist_dir)

@@ -38,11 +38,42 @@ async def _ingest_sources(
     os.makedirs(f"{data_dir}/md", exist_ok=True)
     os.makedirs(f"{data_dir}/chunks", exist_ok=True)
 
+    if not sources or all(not u.strip() for u in sources):
+        import urllib.parse
+
+        import requests
+
+        product_query = canonical_product.replace("_", " ")
+        sources = []
+
+        try:
+            wiki_resp = requests.get(
+                "https://en.wikipedia.org/w/api.php",
+                params={"action": "opensearch", "search": product_query, "limit": 3, "format": "json"},
+                headers={"User-Agent": "PanelForge/0.1"},
+                timeout=10,
+            )
+            if wiki_resp.ok:
+                data = wiki_resp.json()
+                urls = data[3] if len(data) > 3 else []
+                sources.extend(urls[:2])
+        except Exception as exc:
+            logger.warning("Wikipedia search failed: %s", exc)
+
+        if not sources:
+            wiki_slug = urllib.parse.quote(product_query.title().replace(" ", "_"))
+            sources = [f"https://en.wikipedia.org/wiki/{wiki_slug}"]
+
+        logger.info("No URLs provided — auto-found: %s", sources)
+
+    logger.info("=== INGEST START: product=%s, sources=%s ===", canonical_product, sources)
+
     doc_count = 0
     for url in sources:
         url = url.strip()
         if not url:
             continue
+        logger.info("Processing source: %s (type will be detected)", url)
 
         source_type = "web_article"
         if "reddit.com" in url:
@@ -119,13 +150,21 @@ async def _ingest_sources(
             except Exception as exc:
                 logger.warning("Web fetch failed for %s: %s", url, exc)
 
+    logger.info("Fetching complete: %d documents written to data/md/", doc_count)
+
     md_dir = f"{data_dir}/md"
     chunks_path = f"{data_dir}/chunks/{canonical_product}.jsonl"
+
+    md_files = [f for f in os.listdir(md_dir) if f.endswith(".md")]
+    logger.info("MD files in %s: %s", md_dir, md_files)
+
     chunks = await asyncio.to_thread(
         chunk_documents, md_dir, chunks_path, canonical_product
     )
+    logger.info("Chunking complete: %d chunks -> %s", len(chunks), chunks_path)
 
     if not chunks:
+        logger.warning("No chunks produced for product=%s. Check canonical_product in MD frontmatter.", canonical_product)
         return {"source_count": doc_count, "chunk_count": 0}
 
     import config as _config
@@ -139,6 +178,7 @@ async def _ingest_sources(
         collection_name=canonical_product,
     )
     await asyncio.to_thread(store.add_chunks, chunks)
+    logger.info("Embedding + ChromaDB complete: %d chunks stored in collection=%s", len(chunks), canonical_product)
 
     entity_count = 0
     community_count = 0
@@ -183,7 +223,7 @@ async def ingest(project_id: str, body: IngestRequest, request: Request):
         raise HTTPException(404, detail="Project not found")
 
     canonical = _slugify(body.product_name or project.name)
-    data_dir = str(Path("data"))
+    data_dir = str(Path("data") / "projects" / project_id)
 
     try:
         result = await _ingest_sources(body.sources, canonical, data_dir)

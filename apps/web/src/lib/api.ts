@@ -9,70 +9,82 @@ import type {
 
 export type ApiResult<T> = { data: T; dataSource: "live" | "mock" };
 
-async function fetchWithFallback<T>(
+async function fetchStrict<T>(
   url: string,
   options: RequestInit,
-  fallback: T,
-): Promise<ApiResult<T>> {
+  timeoutMs: number = 600_000,
+): Promise<T> {
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), 600_000);
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(url, { ...options, signal: controller.signal });
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      const body = await response.text().catch(() => "");
+      const detail = body ? JSON.parse(body)?.detail ?? body : `HTTP ${response.status}`;
+      throw new Error(detail);
     }
 
-    const data = (await response.json()) as T;
-    return { data, dataSource: "live" };
-  } catch {
-    return { data: fallback, dataSource: "mock" };
+    return (await response.json()) as T;
   } finally {
     window.clearTimeout(timeoutId);
   }
 }
 
-export function createProject(
+async function fetchWithFallback<T>(
+  url: string,
+  options: RequestInit,
+  fallback: T,
+): Promise<ApiResult<T>> {
+  try {
+    const data = await fetchStrict<T>(url, options);
+    return { data, dataSource: "live" };
+  } catch {
+    return { data: fallback, dataSource: "mock" };
+  }
+}
+
+export async function createProject(
   name: string,
   seedUrls: string[],
   hypotheses: string[],
 ): Promise<ApiResult<{ project_id: string }>> {
-  return fetchWithFallback(
+  const data = await fetchStrict<{ project_id: string }>(
     "/api/projects",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, description: hypotheses.join("; ") }),
     },
-    { project_id: "mock-project-id" },
   );
+  return { data, dataSource: "live" };
 }
 
-export function startIngest(
+export async function startIngest(
   projectId: string,
   sources: string[] = [],
   productName: string = "",
 ): Promise<ApiResult<IngestStatus>> {
-  return fetchWithFallback(
+  const data = await fetchStrict<IngestStatus>(
     `/api/projects/${projectId}/ingest`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sources, product_name: productName }),
     },
-    { source_count: 12, chunk_count: 87 },
   );
+  return { data, dataSource: "live" };
 }
 
-export function runSimulation(
+export async function runSimulation(
   projectId: string,
   productName: string,
   description: string,
   hypotheses: string[],
   facets: string[],
 ): Promise<ApiResult<SimulateResponse>> {
-  return fetchWithFallback(
+  const data = await fetchStrict<SimulateResponse>(
     `/api/projects/${projectId}/simulate`,
     {
       method: "POST",
@@ -84,8 +96,8 @@ export function runSimulation(
         facets_to_explore: facets,
       }),
     },
-    { run_id: "mock-run-id", status: "started" },
   );
+  return { data, dataSource: "live" };
 }
 
 export function pollSimulationStatus(

@@ -12,7 +12,7 @@ type Phase = "creating" | "ingesting" | "simulating" | "polling" | "done" | "fai
 
 const PHASE_LABELS: Record<Phase, string> = {
   creating: "Creating project",
-  ingesting: "Ingesting sources",
+  ingesting: "Fetching & analyzing sources (this may take a few minutes)",
   simulating: "Starting simulation",
   polling: "Running simulation",
   done: "Complete",
@@ -44,7 +44,11 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
 
         setPhase("ingesting");
         const sources = project.seedUrls.length > 0 ? project.seedUrls : [];
-        await startIngest(pid, sources, project.productName);
+        const ingestResult = await startIngest(pid, sources, project.productName);
+
+        if (ingestResult.data.chunk_count === 0) {
+          throw new Error("No content found for this product. Try adding seed URLs (Wikipedia, reviews, Reddit threads).");
+        }
 
         setPhase("simulating");
         await runSimulation(pid, project.productName, project.description, project.hypotheses, project.facets);
@@ -79,15 +83,15 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="w-full max-w-md animate-fade-in">
-        <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-          <h2 className="text-center text-xl font-semibold text-gray-900">
+        <div className="card-dia p-9">
+          <h2 className="text-center font-[family-name:var(--font-display)] text-2xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">
             {phase === "failed" ? "Study Failed" : phase === "done" ? "Study Complete" : "Setting Up Your Study"}
           </h2>
-          <p className="mt-1 text-center text-sm text-gray-500">
+          <p className="mt-2 text-center text-sm text-[rgba(0,0,0,0.45)]">
             {project.productName}
           </p>
 
-          <div className="mt-8 space-y-0">
+          <div className="mt-10 space-y-0">
             {PHASE_ORDER.map((p, i) => {
               if (p === "done") return null;
               const isActive = i === currentIdx;
@@ -95,31 +99,29 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
               const isFailed = phase === "failed" && isActive;
               return (
                 <div key={p} className="flex gap-4">
-                  {/* Timeline */}
                   <div className="flex flex-col items-center">
-                    <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
-                      isFailed ? "bg-red-100 text-red-600" :
-                      isDone ? "bg-green-100 text-green-600" :
-                      isActive ? "bg-blue-100 text-blue-600" :
-                      "bg-gray-100 text-gray-400"
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-all ${
+                      isFailed ? "bg-[#FA3D1D]/12 text-[#FA3D1D]" :
+                      isDone ? "bg-emerald-50 text-emerald-600" :
+                      isActive ? "bg-[rgba(0,0,0,0.9)] text-[#F8F8F8]" :
+                      "bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.25)]"
                     }`}>
                       {isFailed ? "!" : isDone ? "\u2713" : isActive ? (
-                        <span className="h-3 w-3 animate-pulse rounded-full bg-blue-600" />
+                        <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#F8F8F8]" />
                       ) : i + 1}
                     </div>
                     {i < PHASE_ORDER.length - 2 && (
-                      <div className={`h-10 w-px ${isDone ? "bg-green-200" : "bg-gray-200"}`} />
+                      <div className={`h-10 w-px ${isDone ? "bg-emerald-200" : "bg-[rgba(0,0,0,0.08)]"}`} />
                     )}
                   </div>
-                  {/* Label */}
                   <div className="pb-10">
-                    <p className={`text-sm font-medium ${
-                      isFailed ? "text-red-600" : isDone ? "text-green-600" : isActive ? "text-gray-900" : "text-gray-400"
+                    <p className={`text-[0.9375rem] font-medium ${
+                      isFailed ? "text-[#FA3D1D]" : isDone ? "text-emerald-600" : isActive ? "text-[rgba(0,0,0,0.85)]" : "text-[rgba(0,0,0,0.3)]"
                     }`}>
                       {PHASE_LABELS[p]}
                     </p>
                     {isActive && p === "polling" && simPhase && (
-                      <p className="mt-0.5 text-xs text-gray-400">Phase: {simPhase}</p>
+                      <p className="mt-0.5 text-xs text-[rgba(0,0,0,0.4)]">Phase: {simPhase}</p>
                     )}
                   </div>
                 </div>
@@ -128,14 +130,14 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
           </div>
 
           {phase === "done" && (
-            <div className="mt-2 rounded-lg bg-green-50 p-3 text-center text-sm font-medium text-green-700">
+            <div className="mt-2 rounded-2xl bg-emerald-50 p-4 text-center text-sm font-medium text-emerald-700">
               Loading dashboard...
             </div>
           )}
 
           {phase === "failed" && (
             <div className="mt-2 space-y-3">
-              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">
+              <div className="rounded-2xl bg-[#FA3D1D]/8 p-4 text-sm text-[#D42E11]">
                 {error ?? "An unknown error occurred."}
               </div>
               <button type="button" onClick={onError} className="btn-secondary w-full">

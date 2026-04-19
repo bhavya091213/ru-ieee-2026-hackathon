@@ -47,7 +47,7 @@ async def _run_simulation_task(
         if hasattr(app_state, "project_products"):
             canonical_product = app_state.project_products.get(project_id)
 
-        data_dir = str(Path("data"))
+        data_dir = str(Path("data") / "projects" / project_id)
 
         chunks_for_clustering: list[dict] = []
         if canonical_product:
