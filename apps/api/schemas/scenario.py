@@ -34,7 +34,4 @@ class Scenario(BaseModel):
     @field_validator("facets_to_explore")
     @classmethod
     def facets_must_be_valid(cls, v: list[str]) -> list[str]:
-        for facet in v:
-            if facet not in VALID_FACETS:
-                raise ValueError(f"invalid facet: {facet!r}")
-        return v
+        return [f.strip().lower() for f in v if f.strip()]

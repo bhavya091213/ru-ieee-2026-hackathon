@@ -25,16 +25,7 @@ def _validate_persona(persona: Persona, cluster: ClusterResult) -> Persona:
             len(filtered_beliefs),
         )
 
-    valid_priorities = {}
-    for key, val in persona.feature_priorities.items():
-        if key in VALID_FACETS:
-            valid_priorities[key] = val
-        else:
-            logger.warning(
-                "Removed invalid feature_priority key '%s' from persona '%s'",
-                key,
-                persona.segment_label,
-            )
+    valid_priorities = {k.strip().lower(): v for k, v in persona.feature_priorities.items()}
 
     entity_ids = list({eid for eid in cluster.entity_ids}) if cluster.entity_ids else persona.graph_entity_ids
 
