@@ -96,12 +96,13 @@ class TestValidatePersona:
         assert len(validated.beliefs) == 1
         assert validated.beliefs[0].claim == "Good"
 
-    def test_removes_invalid_facet_keys(self):
-        persona = _make_persona(feature_priorities={"camera": 0.9, "foobar": 0.5, "battery": 0.6})
+    def test_normalizes_facet_keys_to_lowercase(self):
+        persona = _make_persona(feature_priorities={"Camera": 0.9, "BATTERY": 0.6, "Custom Facet": 0.5})
         cluster = _make_cluster()
         validated = _validate_persona(persona, cluster)
-        assert "foobar" not in validated.feature_priorities
         assert "camera" in validated.feature_priorities
+        assert "battery" in validated.feature_priorities
+        assert "custom facet" in validated.feature_priorities
 
     def test_sets_graph_entity_ids_from_cluster(self):
         persona = _make_persona()

@@ -1,0 +1,80 @@
+{
+  "community-software": {
+    "id": "community-software",
+    "title": "Software",
+    "summary": "Discussion cluster around software",
+    "entity_ids": [
+      "software_apple",
+      "software_iphone",
+      "software_macbook"
+    ]
+  },
+  "community-other": {
+    "id": "community-other",
+    "title": "Other",
+    "summary": "Discussion cluster around other",
+    "entity_ids": [
+      "other_iphone",
+      "other_https",
+      "other_phone"
+    ]
+  },
+  "community-design": {
+    "id": "community-design",
+    "title": "Design",
+    "summary": "Discussion cluster around design",
+    "entity_ids": [
+      "design_macbook",
+      "design_think",
+      "design_more",
+      "design_inch",
+      "design_base"
+    ]
+  },
+  "community-camera": {
+    "id": "community-camera",
+    "title": "Camera",
+    "summary": "Discussion cluster around camera",
+    "entity_ids": [
+      "camera_iphone",
+      "camera_camera",
+      "camera_real",
+      "camera_more",
+      "camera_telephoto"
+    ]
+  },
+  "community-battery": {
+    "id": "community-battery",
+    "title": "Battery",
+    "summary": "Discussion cluster around battery",
+    "entity_ids": [
+      "battery_battery",
+      "battery_life",
+      "battery_charge",
+      "battery_which",
+      "battery_laptop"
+    ]
+  },
+  "community-performance": {
+    "id": "community-performance",
+    "title": "Performance",
+    "summary": "Discussion cluster around performance",
+    "entity_ids": [
+      "performance_battery",
+      "performance_performance",
+      "performance_power",
+      "performance_macbook",
+      "performance_while"
+    ]
+  },
+  "community-price": {
+    "id": "community-price",
+    "title": "Price",
+    "summary": "Discussion cluster around price",
+    "entity_ids": [
+      "price_macbook",
+      "price_battery",
+      "price_also"
+    ]
+  }
+}

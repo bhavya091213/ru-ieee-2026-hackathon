@@ -80,6 +80,13 @@ async def _ingest_sources(
 
     log(f"Starting ingest for \"{canonical_product}\" — {len(sources)} source(s)")
 
+    has_reddit = any("reddit.com" in u for u in sources)
+    if not has_reddit:
+        product_query = canonical_product.replace("_", " ")
+        auto_reddit = f"https://www.reddit.com/r/all/search?q={product_query}"
+        sources.append(auto_reddit)
+        log(f"Auto-added Reddit search for \"{product_query}\"")
+
     doc_count = 0
     for idx, url in enumerate(sources):
         url = url.strip()
@@ -128,7 +135,7 @@ async def _ingest_sources(
 
                 log(f"{label} Scraping r/{subreddit}...")
                 results = await asyncio.to_thread(
-                    fetch_reddit, subreddit, canonical_product, 10, f"{data_dir}/raw"
+                    fetch_reddit, subreddit, canonical_product, 25, f"{data_dir}/raw"
                 )
                 posts = [r for r in results if r.get("source_type") == "reddit_post"]
                 comments = [r for r in results if r.get("source_type") == "reddit_comment"]

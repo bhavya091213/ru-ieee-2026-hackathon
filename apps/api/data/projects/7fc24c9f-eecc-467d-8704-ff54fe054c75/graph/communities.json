@@ -1,0 +1,48 @@
+{
+  "community-performance": {
+    "id": "community-performance",
+    "title": "Performance",
+    "summary": "Discussion cluster around performance",
+    "entity_ids": [
+      "performance_which",
+      "performance_client",
+      "performance_performance",
+      "performance_cores",
+      "performance_tensor"
+    ]
+  },
+  "community-price": {
+    "id": "community-price",
+    "title": "Price",
+    "summary": "Discussion cluster around price",
+    "entity_ids": [
+      "price_going",
+      "price_also",
+      "price_upgrade"
+    ]
+  },
+  "community-other": {
+    "id": "community-other",
+    "title": "Other",
+    "summary": "Discussion cluster around other",
+    "entity_ids": [
+      "other_already",
+      "other_msrp",
+      "other_woohoooooo",
+      "other_connector",
+      "other_melted"
+    ]
+  },
+  "community-software": {
+    "id": "community-software",
+    "title": "Software",
+    "summary": "Discussion cluster around software",
+    "entity_ids": [
+      "software_series",
+      "software_super",
+      "software_ever",
+      "software_happened",
+      "software_release"
+    ]
+  }
+}

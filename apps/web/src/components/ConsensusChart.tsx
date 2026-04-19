@@ -12,6 +12,15 @@ export function ConsensusChart({ featureScores }: ConsensusChartProps) {
     min: Number((row.min * 100).toFixed(0)),
   }));
 
+  if (data.length === 0) {
+    return (
+      <div className="card-dia p-6">
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Feature Scores</h2>
+        <p className="mt-4 text-center text-sm text-[rgba(0,0,0,0.35)]">No feature score data available.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="card-dia p-6">
       <h2 className="font-[family-name:var(--font-display)] text-lg font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Feature Scores</h2>
@@ -19,15 +28,14 @@ export function ConsensusChart({ featureScores }: ConsensusChartProps) {
       <div className="mt-5 h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ left: 20 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" horizontal={false} />
-            <XAxis type="number" domain={[0, 100]} stroke="rgba(0,0,0,0.3)" fontSize={12} />
-            <YAxis dataKey="facet" type="category" stroke="rgba(0,0,0,0.3)" fontSize={12} width={70} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" horizontal={false} />
+            <XAxis type="number" domain={[0, 100]} stroke="#999" fontSize={12} />
+            <YAxis dataKey="facet" type="category" stroke="#999" fontSize={12} width={70} />
             <Tooltip
-              contentStyle={{ background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}
-              labelStyle={{ color: 'rgba(0,0,0,0.85)', fontWeight: 500 }}
+              contentStyle={{ background: '#fff', border: '1px solid #eee', borderRadius: '16px', boxShadow: '0 4px 16px rgba(0,0,0,0.06)' }}
             />
-            <Bar dataKey="min" name="Min" fill="rgba(0,0,0,0.08)" radius={[0, 8, 8, 0]} />
-            <Bar dataKey="mean" name="Mean" fill="rgba(0,0,0,0.75)" radius={[0, 8, 8, 0]} />
+            <Bar dataKey="min" name="Min" fill="#d4d4d4" radius={[0, 8, 8, 0]} />
+            <Bar dataKey="mean" name="Mean" fill="#333333" radius={[0, 8, 8, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

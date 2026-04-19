@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AdoptionShift } from "../components/AdoptionShift";
 import { ConsensusChart } from "../components/ConsensusChart";
 import { DisagreementRadar } from "../components/DisagreementRadar";
 import { ErrorBoundary } from "../components/ErrorBoundary";
@@ -6,6 +7,8 @@ import { FeatureHeatmap } from "../components/FeatureHeatmap";
 import { KPICards } from "../components/KPICards";
 import { PersonaTable } from "../components/PersonaTable";
 import { QuoteWall } from "../components/QuoteWall";
+import { RoundTimeline } from "../components/RoundTimeline";
+import { TopicGraph } from "../components/TopicGraph";
 import { TribePanel } from "../components/TribePanel";
 import { useDashboard } from "../hooks/useDashboard";
 
@@ -16,7 +19,7 @@ interface DashboardPageProps {
   onExplore?: () => void;
 }
 
-const TABS = ["Overview", "Personas", "Evidence", "Insights"] as const;
+const TABS = ["Overview", "Personas", "Discussion", "Evidence", "Insights"] as const;
 type Tab = (typeof TABS)[number];
 
 export function DashboardPage({ projectId, productName, onNewStudy, onExplore }: DashboardPageProps) {
@@ -118,6 +121,13 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
                 <DisagreementRadar featureScores={data.feature_scores} />
               </ErrorBoundary>
             </div>
+            <ErrorBoundary>
+              <AdoptionShift
+                personas={data.personas}
+                round1Responses={data.round1_responses}
+                round2Responses={data.round2_responses}
+              />
+            </ErrorBoundary>
             <TribePanel tribe={data.tribe} />
           </div>
         )}
@@ -129,13 +139,29 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
               round1Responses={data.round1_responses}
               round2Responses={data.round2_responses}
             />
+            <ErrorBoundary>
+              <FeatureHeatmap featureScores={data.feature_scores} personas={data.personas} />
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {tab === "Discussion" && (
+          <div className="animate-fade-in space-y-6">
+            <ErrorBoundary>
+              <RoundTimeline
+                personas={data.personas}
+                round1Responses={data.round1_responses}
+                round2Responses={data.round2_responses}
+                moderatorQuestion={data.moderator_question}
+              />
+            </ErrorBoundary>
           </div>
         )}
 
         {tab === "Evidence" && (
           <div className="animate-fade-in space-y-6">
             <ErrorBoundary>
-              <FeatureHeatmap featureScores={data.feature_scores} personas={data.personas} />
+              <TopicGraph projectId={projectId} />
             </ErrorBoundary>
             <QuoteWall quotes={data.quotes} />
           </div>
@@ -179,6 +205,16 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
                   </ul>
                 </div>
               </div>
+              {data.analyst_summary.messaging_suggestions.length > 0 && (
+                <div className="mt-8">
+                  <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[#C679C4]">Messaging Suggestions</h3>
+                  <ul className="space-y-2">
+                    {data.analyst_summary.messaging_suggestions.map((s) => (
+                      <li key={s} className="text-[0.9375rem] leading-relaxed text-[rgba(0,0,0,0.6)]">{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {data.analyst_summary.evidence_gaps.length > 0 && (
                 <div className="mt-8 rounded-2xl bg-[rgba(0,0,0,0.03)] p-5">
                   <h3 className="mb-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-wider text-[rgba(0,0,0,0.5)]">Evidence Gaps</h3>
@@ -193,7 +229,7 @@ export function DashboardPage({ projectId, productName, onNewStudy, onExplore }:
             {data.moderator_question && (
               <div className="card-dia p-7">
                 <h2 className="font-[family-name:var(--font-display)] text-xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Moderator Follow-Up</h2>
-                <p className="mt-3 font-[family-name:var(--font-display)] text-lg italic text-[rgba(0,0,0,0.6)]">"{data.moderator_question}"</p>
+                <p className="mt-3 font-[family-name:var(--font-display)] text-lg italic text-[rgba(0,0,0,0.6)]">&ldquo;{data.moderator_question}&rdquo;</p>
               </div>
             )}
           </div>

@@ -1,0 +1,503 @@
+{
+  "nodes": [
+    {
+      "id": "software_apple",
+      "title": "apple",
+      "type": "Feature",
+      "description": "Keyword 'apple' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_iphone",
+      "title": "iphone",
+      "type": "Feature",
+      "description": "Keyword 'iphone' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_macbook",
+      "title": "macbook",
+      "type": "Feature",
+      "description": "Keyword 'macbook' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "other_iphone",
+      "title": "iphone",
+      "type": "Claim",
+      "description": "Keyword 'iphone' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_https",
+      "title": "https",
+      "type": "Claim",
+      "description": "Keyword 'https' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_phone",
+      "title": "phone",
+      "type": "Claim",
+      "description": "Keyword 'phone' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "design_macbook",
+      "title": "macbook",
+      "type": "Feature",
+      "description": "Keyword 'macbook' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_think",
+      "title": "think",
+      "type": "Feature",
+      "description": "Keyword 'think' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_more",
+      "title": "more",
+      "type": "Feature",
+      "description": "Keyword 'more' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_inch",
+      "title": "inch",
+      "type": "Feature",
+      "description": "Keyword 'inch' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_base",
+      "title": "base",
+      "type": "Feature",
+      "description": "Keyword 'base' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "camera_iphone",
+      "title": "iphone",
+      "type": "Feature",
+      "description": "Keyword 'iphone' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_camera",
+      "title": "camera",
+      "type": "Feature",
+      "description": "Keyword 'camera' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_real",
+      "title": "real",
+      "type": "Feature",
+      "description": "Keyword 'real' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_more",
+      "title": "more",
+      "type": "Feature",
+      "description": "Keyword 'more' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_telephoto",
+      "title": "telephoto",
+      "type": "Feature",
+      "description": "Keyword 'telephoto' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "battery_battery",
+      "title": "battery",
+      "type": "Feature",
+      "description": "Keyword 'battery' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "battery_life",
+      "title": "life",
+      "type": "Feature",
+      "description": "Keyword 'life' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "battery_charge",
+      "title": "charge",
+      "type": "Feature",
+      "description": "Keyword 'charge' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "battery_which",
+      "title": "which",
+      "type": "Feature",
+      "description": "Keyword 'which' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "battery_laptop",
+      "title": "laptop",
+      "type": "Feature",
+      "description": "Keyword 'laptop' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "performance_battery",
+      "title": "battery",
+      "type": "Feature",
+      "description": "Keyword 'battery' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_performance",
+      "title": "performance",
+      "type": "Feature",
+      "description": "Keyword 'performance' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_power",
+      "title": "power",
+      "type": "Feature",
+      "description": "Keyword 'power' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_macbook",
+      "title": "macbook",
+      "type": "Feature",
+      "description": "Keyword 'macbook' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_while",
+      "title": "while",
+      "type": "Feature",
+      "description": "Keyword 'while' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "price_macbook",
+      "title": "macbook",
+      "type": "Feature",
+      "description": "Keyword 'macbook' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_battery",
+      "title": "battery",
+      "type": "Feature",
+      "description": "Keyword 'battery' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_also",
+      "title": "also",
+      "type": "Feature",
+      "description": "Keyword 'also' from price discussions",
+      "community": "community-price"
+    }
+  ],
+  "edges": [
+    {
+      "source": "software_apple",
+      "target": "software_iphone",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_apple",
+      "target": "software_macbook",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_iphone",
+      "target": "software_macbook",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_iphone",
+      "target": "other_https",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_iphone",
+      "target": "other_phone",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_https",
+      "target": "other_phone",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_macbook",
+      "target": "design_think",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_macbook",
+      "target": "design_more",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_macbook",
+      "target": "design_inch",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_macbook",
+      "target": "design_base",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_think",
+      "target": "design_more",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_think",
+      "target": "design_inch",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_think",
+      "target": "design_base",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_more",
+      "target": "design_inch",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_more",
+      "target": "design_base",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_inch",
+      "target": "design_base",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_iphone",
+      "target": "camera_camera",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_iphone",
+      "target": "camera_real",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_iphone",
+      "target": "camera_more",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_iphone",
+      "target": "camera_telephoto",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_camera",
+      "target": "camera_real",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_camera",
+      "target": "camera_more",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_camera",
+      "target": "camera_telephoto",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_real",
+      "target": "camera_more",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_real",
+      "target": "camera_telephoto",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_more",
+      "target": "camera_telephoto",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_battery",
+      "target": "battery_life",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_battery",
+      "target": "battery_charge",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_battery",
+      "target": "battery_which",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_battery",
+      "target": "battery_laptop",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_life",
+      "target": "battery_charge",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_life",
+      "target": "battery_which",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_life",
+      "target": "battery_laptop",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_charge",
+      "target": "battery_which",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_charge",
+      "target": "battery_laptop",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_which",
+      "target": "battery_laptop",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_battery",
+      "target": "performance_performance",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_battery",
+      "target": "performance_power",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_battery",
+      "target": "performance_macbook",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_battery",
+      "target": "performance_while",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_power",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_macbook",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_while",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_power",
+      "target": "performance_macbook",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_power",
+      "target": "performance_while",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_macbook",
+      "target": "performance_while",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_macbook",
+      "target": "price_battery",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_macbook",
+      "target": "price_also",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_battery",
+      "target": "price_also",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    }
+  ]
+}

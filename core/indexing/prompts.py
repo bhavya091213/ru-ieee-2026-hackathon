@@ -24,7 +24,7 @@ Please analyze this chunk and extract the following structured information. Outp
 
 **Claims**: List all specific claims or statements made about products or features in the text.
 
-**Facet**: Categorize the main topic of this chunk into exactly one of: "camera", "battery", "price", "design", "privacy", "ecosystem", "other"
+**Facet**: Categorize the main topic of this chunk into a short lowercase label (e.g. "performance", "price", "design", "reliability"). Use "other" if no specific facet applies.
 
 **Stance**: Classify the overall sentiment/tone of the chunk into exactly one of: "positive", "negative", "mixed", "rumor", "review"
 

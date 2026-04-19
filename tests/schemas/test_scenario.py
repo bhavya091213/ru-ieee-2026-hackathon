@@ -35,9 +35,9 @@ class TestScenarioValidators:
         with pytest.raises(ValidationError):
             _make_scenario(hypotheses=["x" * 501])
 
-    def test_rejects_invalid_facet(self):
-        with pytest.raises(ValidationError):
-            _make_scenario(facets_to_explore=["camera", "invalid_facet"])
+    def test_accepts_any_facet_and_normalizes(self):
+        scenario = _make_scenario(facets_to_explore=["GPU Performance", "THERMAL"])
+        assert scenario.facets_to_explore == ["gpu performance", "thermal"]
 
     def test_valid_scenario_passes(self):
         scenario = _make_scenario()

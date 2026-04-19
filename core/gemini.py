@@ -39,11 +39,32 @@ def _strip_additional_properties(schema: dict) -> dict:
     return schema
 
 
+def _patch_dict_properties(schema: dict) -> None:
+    """Gemini needs explicit property schemas for dict fields.
+
+    When Pydantic emits `dict[str, float]`, the JSON schema becomes
+    `{"type": "object"}` after stripping `additionalProperties`. Gemini
+    then returns `{}`. This patches any bare `{"type": "object"}` property
+    that looks like a score/priority dict to include a proper value hint
+    by switching it to an array of key-value items that Pydantic can still
+    parse, OR by re-adding additionalProperties for the Gemini API.
+    """
+    props = schema.get("properties", {})
+    for key, prop in props.items():
+        if prop.get("type") == "object" and "properties" not in prop:
+            props[key] = {
+                "title": prop.get("title", key),
+                "description": f"A JSON object mapping string keys to float values (0.0-1.0). Example: {{\"key1\": 0.8, \"key2\": 0.3}}",
+                "type": "object",
+            }
+
+
 async def generate_structured(
     prompt: str,
     response_schema: type[T],
     temperature: float = 0.0,
     thinking_budget: int | None = None,
+    schema_hints: dict[str, dict] | None = None,
 ) -> T:
     cache_key = hashlib.sha256(
         (prompt + response_schema.__name__ + str(temperature)).encode()
@@ -62,6 +83,12 @@ async def generate_structured(
     client = _config.get_gemini_client()
 
     clean_schema = _strip_additional_properties(response_schema.model_json_schema())
+    _patch_dict_properties(clean_schema)
+    if schema_hints:
+        props = clean_schema.get("properties", {})
+        for field_name, hint_schema in schema_hints.items():
+            if field_name in props:
+                props[field_name] = hint_schema
 
     config_kwargs: dict = {
         "response_mime_type": "application/json",

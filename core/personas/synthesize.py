@@ -4,7 +4,6 @@ import asyncio
 import json
 import logging
 
-from apps.api.schemas.chunk import VALID_FACETS
 from apps.api.schemas.persona import Persona
 from core.gemini import generate_structured
 from core.personas.cluster import ClusterResult

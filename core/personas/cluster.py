@@ -104,7 +104,7 @@ def _kmeans_fallback(embeddings: np.ndarray, n_clusters: int) -> list[int]:
 def _merge_small_clusters(
     labels: list[int],
     embeddings: np.ndarray,
-    min_size: int = 3,
+    min_size: int = 2,
 ) -> list[int]:
     from collections import Counter
 

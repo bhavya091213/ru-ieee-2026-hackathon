@@ -11,6 +11,15 @@ export function DisagreementRadar({ featureScores }: DisagreementRadarProps) {
     disagreement: Number((row.std * 100).toFixed(0)),
   }));
 
+  if (data.length === 0) {
+    return (
+      <div className="card-dia p-6">
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Disagreement Radar</h2>
+        <p className="mt-4 text-center text-sm text-[rgba(0,0,0,0.35)]">No disagreement data available.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="card-dia p-6">
       <h2 className="font-[family-name:var(--font-display)] text-lg font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">Disagreement Radar</h2>
@@ -18,8 +27,8 @@ export function DisagreementRadar({ featureScores }: DisagreementRadarProps) {
       <div className="mt-5 h-64">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data}>
-            <PolarGrid stroke="rgba(0,0,0,0.08)" />
-            <PolarAngleAxis dataKey="facet" tick={{ fill: 'rgba(0,0,0,0.5)', fontSize: 12 }} />
+            <PolarGrid stroke="#e5e5e5" />
+            <PolarAngleAxis dataKey="facet" tick={{ fill: '#777', fontSize: 12 }} />
             <Radar dataKey="disagreement" fill="#FFB005" fillOpacity={0.2} stroke="#FFB005" strokeWidth={2} />
           </RadarChart>
         </ResponsiveContainer>

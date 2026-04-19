@@ -11,328 +11,31 @@ interface SimulationPageProps {
 
 type Phase = "creating" | "ingesting" | "simulating" | "polling" | "done" | "failed";
 
-const PHASE_LABELS: Record<Phase, string> = {
-  creating: "Creating project",
-  ingesting: "Fetching & analyzing sources (this may take a few minutes)",
-  simulating: "Starting simulation",
-  polling: "Running simulation",
-  done: "Complete",
-  failed: "Failed",
-};
-
 const PHASE_ORDER: Phase[] = ["creating", "ingesting", "simulating", "polling", "done"];
 
-function CosmicBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
+const PHASE_META: Record<Phase, { label: string; color: string }> = {
+  creating: { label: "Creating project", color: "#0358F7" },
+  ingesting: { label: "Ingesting sources", color: "#C679C4" },
+  simulating: { label: "Preparing simulation", color: "#FFB005" },
+  polling: { label: "Focus group in session", color: "#FA3D1D" },
+  done: { label: "Complete", color: "#22c55e" },
+  failed: { label: "Failed", color: "#FA3D1D" },
+};
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+const FACET_COLORS = ["#0358F7", "#FFB005", "#FA3D1D", "#C679C4", "#5092C7", "#22c55e", "#f97316", "#8b5cf6"];
 
-    const ctx = gsap.context(() => {
-      // Planets: gentle floating
-      container.querySelectorAll<HTMLElement>("[data-planet]").forEach((el) => {
-        const speed = parseFloat(el.dataset.speed || "20");
-        const range = parseFloat(el.dataset.range || "25");
-        gsap.to(el, {
-          y: `+=${range}`,
-          duration: speed,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-        gsap.to(el, {
-          x: `+=${range * 0.4}`,
-          duration: speed * 1.3,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-      });
-
-      // Orbit rings: slow rotation
-      container.querySelectorAll<HTMLElement>("[data-orbit]").forEach((el) => {
-        const dur = parseFloat(el.dataset.dur || "60");
-        const dir = el.dataset.dir === "ccw" ? -360 : 360;
-        gsap.to(el, {
-          rotation: dir,
-          duration: dur,
-          ease: "none",
-          repeat: -1,
-          transformOrigin: "50% 50%",
-        });
-      });
-
-      // Stars: twinkle
-      container.querySelectorAll<HTMLElement>("[data-star]").forEach((el, i) => {
-        gsap.to(el, {
-          opacity: 0.15,
-          duration: 1.5 + (i % 3) * 0.5,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          delay: i * 0.3,
-        });
-      });
-
-      // Comet: streak across
-      const comet = container.querySelector<HTMLElement>("[data-comet]");
-      if (comet) {
-        const animateComet = () => {
-          const startY = Math.random() * 60 + 10;
-          gsap.set(comet, { x: "-100px", y: `${startY}%`, opacity: 0 });
-          gsap.to(comet, {
-            x: "calc(100vw + 100px)",
-            y: `${startY + 15}%`,
-            opacity: 1,
-            duration: 3,
-            ease: "power1.in",
-            onComplete: () => {
-              gsap.to(comet, {
-                opacity: 0, duration: 0.3, onComplete: () => {
-                  gsap.delayedCall(8 + Math.random() * 12, animateComet);
-                }
-              });
-            },
-          });
-        };
-        gsap.delayedCall(3, animateComet);
-      }
-    }, container);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <div ref={containerRef} className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* Large orbit rings */}
-      <div
-        data-orbit
-        data-dur="80"
-        className="absolute rounded-full border border-dashed"
-        style={{
-          width: 500,
-          height: 500,
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          borderColor: "rgba(3, 88, 247, 0.1)",
-        }}
-      />
-      <div
-        data-orbit
-        data-dur="60"
-        data-dir="ccw"
-        className="absolute rounded-full border border-dashed"
-        style={{
-          width: 700,
-          height: 700,
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          borderColor: "rgba(198, 121, 196, 0.08)",
-        }}
-      />
-      <div
-        data-orbit
-        data-dur="100"
-        className="absolute rounded-full border"
-        style={{
-          width: 900,
-          height: 900,
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          borderColor: "rgba(255, 176, 5, 0.06)",
-          borderStyle: "dotted",
-        }}
-      />
-
-      {/* Planet 1 — large blue */}
-      <div
-        data-planet
-        data-speed="18"
-        data-range="30"
-        className="absolute"
-        style={{ left: "8%", top: "18%" }}
-      >
-        <div
-          className="rounded-full"
-          style={{
-            width: 60,
-            height: 60,
-            background: "radial-gradient(circle at 35% 35%, #5092C7, #0358F7 60%, #023494)",
-            boxShadow: "0 0 40px rgba(3, 88, 247, 0.3), 0 0 80px rgba(3, 88, 247, 0.1)",
-          }}
-        />
-      </div>
-
-      {/* Planet 2 — medium pink/orchid */}
-      <div
-        data-planet
-        data-speed="22"
-        data-range="20"
-        className="absolute"
-        style={{ right: "12%", top: "12%" }}
-      >
-        <div
-          className="rounded-full"
-          style={{
-            width: 40,
-            height: 40,
-            background: "radial-gradient(circle at 35% 35%, #e8a5e6, #C679C4 60%, #8a4589)",
-            boxShadow: "0 0 30px rgba(198, 121, 196, 0.35), 0 0 60px rgba(198, 121, 196, 0.1)",
-          }}
-        />
-      </div>
-
-      {/* Planet 3 — small gold */}
-      <div
-        data-planet
-        data-speed="15"
-        data-range="35"
-        className="absolute"
-        style={{ left: "18%", bottom: "20%" }}
-      >
-        <div
-          className="rounded-full"
-          style={{
-            width: 28,
-            height: 28,
-            background: "radial-gradient(circle at 35% 35%, #FFD666, #FFB005 60%, #CC8A00)",
-            boxShadow: "0 0 25px rgba(255, 176, 5, 0.4), 0 0 50px rgba(255, 176, 5, 0.15)",
-          }}
-        />
-      </div>
-
-      {/* Planet 4 — medium red */}
-      <div
-        data-planet
-        data-speed="25"
-        data-range="22"
-        className="absolute"
-        style={{ right: "8%", bottom: "25%" }}
-      >
-        <div
-          className="rounded-full"
-          style={{
-            width: 36,
-            height: 36,
-            background: "radial-gradient(circle at 35% 35%, #FF7B66, #FA3D1D 60%, #B82A11)",
-            boxShadow: "0 0 30px rgba(250, 61, 29, 0.3), 0 0 60px rgba(250, 61, 29, 0.1)",
-          }}
-        />
-      </div>
-
-      {/* Planet 5 — tiny steel with ring */}
-      <div
-        data-planet
-        data-speed="20"
-        data-range="18"
-        className="absolute"
-        style={{ right: "30%", top: "8%" }}
-      >
-        <div className="relative">
-          <div
-            className="rounded-full"
-            style={{
-              width: 20,
-              height: 20,
-              background: "radial-gradient(circle at 35% 35%, #8BBAE0, #5092C7 60%, #2D6A9F)",
-              boxShadow: "0 0 20px rgba(80, 146, 199, 0.35)",
-            }}
-          />
-          {/* Saturn-like ring */}
-          <div
-            className="absolute rounded-full border"
-            style={{
-              width: 36,
-              height: 12,
-              left: -8,
-              top: 6,
-              borderColor: "rgba(80, 146, 199, 0.3)",
-              transform: "rotateX(60deg)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Twinkling stars */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div
-          key={`star-${i}`}
-          data-star
-          className="absolute rounded-full bg-current"
-          style={{
-            width: 2 + (i % 3),
-            height: 2 + (i % 3),
-            left: `${5 + ((i * 4.7 + 13) % 90)}%`,
-            top: `${3 + ((i * 7.3 + 8) % 94)}%`,
-            color: ["#0358F7", "#C679C4", "#FFB005", "#5092C7", "#FA3D1D"][i % 5],
-            opacity: 0.35 + (i % 4) * 0.1,
-          }}
-        />
-      ))}
-
-      {/* Comet */}
-      <div data-comet className="absolute opacity-0" style={{ left: -100, top: "30%" }}>
-        <div className="relative">
-          <div
-            className="h-1 rounded-full"
-            style={{
-              width: 80,
-              background: "linear-gradient(90deg, transparent, rgba(255, 176, 5, 0.6), #FFB005)",
-            }}
-          />
-          <div
-            className="absolute right-0 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full"
-            style={{
-              background: "#FFD666",
-              boxShadow: "0 0 8px rgba(255, 176, 5, 0.8)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Soft ambient glow behind center */}
-      <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          width: 400,
-          height: 400,
-          background: "radial-gradient(circle, rgba(3, 88, 247, 0.06) 0%, rgba(198, 121, 196, 0.04) 40%, transparent 70%)",
-          filter: "blur(40px)",
-        }}
-      />
-    </div>
-  );
-}
-
-function PulseRing({ active, color }: { active: boolean; color: string }) {
-  const ringRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!active || !ringRef.current) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(ringRef.current, { scale: 1, opacity: 0.5 }, {
-        scale: 2.5,
-        opacity: 0,
-        duration: 1.5,
-        ease: "power2.out",
-        repeat: -1,
-      });
-    });
-    return () => ctx.revert();
-  }, [active]);
-
-  if (!active) return null;
-  return (
-    <div
-      ref={ringRef}
-      className="absolute inset-0 rounded-full"
-      style={{ border: `2px solid ${color}` }}
-    />
-  );
+function buildPersonas(facets: string[]) {
+  return facets.map((facet, i) => {
+    const words = facet.trim().split(/\s+/);
+    const initials = words.length >= 2
+      ? (words[0][0] + words[1][0]).toUpperCase()
+      : facet.slice(0, 2).toUpperCase();
+    return {
+      name: facet.charAt(0).toUpperCase() + facet.slice(1),
+      initials,
+      color: FACET_COLORS[i % FACET_COLORS.length],
+    };
+  });
 }
 
 export function SimulationPage({ project, onComplete, onError }: SimulationPageProps) {
@@ -340,51 +43,86 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
   const [simPhase, setSimPhase] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
+  const [visiblePersonas, setVisiblePersonas] = useState(0);
+  const [activeSpeaker, setActiveSpeaker] = useState(-1);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const logPollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const logCountRef = useRef(0);
-  const projectIdRef = useRef<string | null>(null);
   const ranRef = useRef(false);
-  const cardRef = useRef<HTMLDivElement>(null);
   const logEndRef = useRef<HTMLDivElement>(null);
+  const talkRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const revealRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const personas = buildPersonas(project.facets.length > 0 ? project.facets : [project.productName]);
 
   const stopPolling = useCallback(() => {
     if (pollRef.current) { clearInterval(pollRef.current); pollRef.current = null; }
     if (logPollRef.current) { clearInterval(logPollRef.current); logPollRef.current = null; }
+    if (talkRef.current) { clearInterval(talkRef.current); talkRef.current = null; }
+    if (revealRef.current) { clearTimeout(revealRef.current); revealRef.current = null; }
   }, []);
 
   const startLogPolling = useCallback((pid: string) => {
-    projectIdRef.current = pid;
     logCountRef.current = 0;
     logPollRef.current = setInterval(async () => {
-      const res = await fetchProgressLogs(pid, logCountRef.current);
-      const newMsgs = res.data.messages;
-      if (newMsgs.length > 0) {
-        logCountRef.current += newMsgs.length;
-        setLogs(prev => [...prev, ...newMsgs]);
-      }
+      try {
+        const res = await fetchProgressLogs(pid, logCountRef.current);
+        const newMsgs = res.data.messages;
+        if (newMsgs.length > 0) {
+          logCountRef.current += newMsgs.length;
+          setLogs(prev => [...prev, ...newMsgs]);
+        }
+      } catch {}
     }, 1200);
   }, []);
 
+  // Card entrance animation
   useEffect(() => {
+    if (!containerRef.current) return;
     const ctx = gsap.context(() => {
-      if (cardRef.current) {
-        gsap.from(cardRef.current, {
-          y: 50,
-          opacity: 0,
-          scale: 0.92,
-          duration: 1,
-          ease: "power3.out",
-        });
-      }
+      gsap.from(containerRef.current, { y: 40, opacity: 0, duration: 0.8, ease: "power3.out" });
     });
     return () => ctx.revert();
   }, []);
 
+  // Persona reveal + speaking cycle during simulation
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [logs]);
+    if (phase !== "polling" && phase !== "simulating") {
+      setVisiblePersonas(0);
+      setActiveSpeaker(-1);
+      return;
+    }
 
+    let count = 0;
+    const reveal = () => {
+      if (count < personas.length) {
+        count++;
+        setVisiblePersonas(count);
+        revealRef.current = setTimeout(reveal, 350);
+      }
+    };
+    revealRef.current = setTimeout(reveal, 200);
+
+    const startSpeaking = setTimeout(() => {
+      let speakerIdx = 0;
+      talkRef.current = setInterval(() => {
+        setActiveSpeaker(speakerIdx % personas.length);
+        speakerIdx++;
+        setTimeout(() => setActiveSpeaker(-1), 2200);
+      }, 3000);
+    }, personas.length * 350 + 500);
+
+    return () => {
+      clearTimeout(startSpeaking);
+      if (talkRef.current) clearInterval(talkRef.current);
+      if (revealRef.current) clearTimeout(revealRef.current);
+    };
+  }, [phase, personas.length]);
+
+  useEffect(() => { logEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [logs]);
+
+  // Main pipeline
   useEffect(() => {
     if (ranRef.current) return;
     ranRef.current = true;
@@ -401,7 +139,7 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
         const ingestResult = await startIngest(pid, sources, project.productName);
 
         if (ingestResult.data.chunk_count === 0) {
-          throw new Error("No content found for this product. Try adding seed URLs (Wikipedia, reviews, Reddit threads).");
+          throw new Error("No content found for this product. Try adding seed URLs.");
         }
 
         setPhase("simulating");
@@ -416,7 +154,7 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
             stopPolling();
             if (s.phase === "DONE" || !s.error) {
               setPhase("done");
-              setTimeout(() => onComplete(pid), 800);
+              setTimeout(() => onComplete(pid), 1200);
             } else {
               setPhase("failed");
               setError(s.error);
@@ -433,108 +171,168 @@ export function SimulationPage({ project, onComplete, onError }: SimulationPageP
   }, [project, onComplete, stopPolling, startLogPolling]);
 
   const currentIdx = PHASE_ORDER.indexOf(phase === "failed" ? "polling" : phase);
-  const stepColors = ["#0358F7", "#C679C4", "#FFB005", "#FA3D1D"];
+  const isSessionActive = phase === "polling" || phase === "simulating";
+  const activePersona = activeSpeaker >= 0 ? personas[activeSpeaker] : null;
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center px-4" style={{ background: "linear-gradient(180deg, #F8F8F8 0%, #F0F0F8 50%, #F8F8F8 100%)" }}>
-      <CosmicBackground />
+    <main className="flex min-h-screen items-center justify-center px-4" style={{ background: "#F8F8F8" }}>
+      <div ref={containerRef} className="w-full max-w-xl">
+        <div className="card-dia overflow-hidden">
+          {/* Colored top bar showing current phase */}
+          <div className="h-1 transition-colors duration-700" style={{ backgroundColor: PHASE_META[phase].color }} />
 
-      <div className="relative z-10 w-full max-w-md">
-        <div ref={cardRef} className="card-dia p-9" style={{ backdropFilter: "blur(8px)", background: "rgba(255,255,255,0.92)" }}>
-          <h2 className="text-center font-[family-name:var(--font-display)] text-2xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">
-            {phase === "failed" ? "Study Failed" : phase === "done" ? "Study Complete" : "Setting Up Your Study"}
-          </h2>
-          <p className="mt-2 text-center text-sm text-[rgba(0,0,0,0.45)]">
-            {project.productName}
-          </p>
+          <div className="p-7 sm:p-9">
+            {/* Header */}
+            <div className="text-center">
+              <p className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.2em] text-[rgba(0,0,0,0.35)]">
+                PanelForge
+              </p>
+              <h2 className="mt-3 font-[family-name:var(--font-display)] text-2xl font-light tracking-[-0.02em] text-[rgba(0,0,0,0.85)]">
+                {project.productName}
+              </h2>
+            </div>
 
-          <div className="mt-10 space-y-0">
-            {PHASE_ORDER.map((p, i) => {
-              if (p === "done") return null;
-              const isActive = i === currentIdx;
-              const isDone = i < currentIdx || phase === "done";
-              const isFailed = phase === "failed" && isActive;
-              return (
-                <div key={p} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div className="relative">
-                      <PulseRing active={isActive && !isFailed} color={stepColors[i]} />
+            {/* Progress steps */}
+            <div className="mt-7 flex items-center justify-center gap-2">
+              {PHASE_ORDER.slice(0, 4).map((p, i) => {
+                const done = i < currentIdx || phase === "done";
+                const active = i === currentIdx && phase !== "done" && phase !== "failed";
+                const failed = phase === "failed" && i === currentIdx;
+                const meta = PHASE_META[p];
+                return (
+                  <div key={p} className="flex items-center gap-2">
+                    {i > 0 && (
+                      <div className={`h-px w-4 sm:w-8 transition-colors duration-500 ${done ? "bg-emerald-300" : "bg-[rgba(0,0,0,0.08)]"}`} />
+                    )}
+                    <div className="flex flex-col items-center gap-1">
                       <div
-                        className={`relative z-10 flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-all duration-500 ${
-                          isFailed ? "bg-[#FA3D1D]/12 text-[#FA3D1D]" :
-                          isDone ? "bg-emerald-50 text-emerald-600" :
-                          isActive ? "text-white" :
-                          "bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.25)]"
+                        className={`flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-bold transition-all duration-500 ${
+                          failed ? "bg-[#FA3D1D]/12 text-[#FA3D1D]"
+                          : done ? "bg-emerald-50 text-emerald-600"
+                          : active ? "text-white"
+                          : "bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.2)]"
                         }`}
-                        style={isActive && !isFailed ? {
-                          backgroundColor: stepColors[i],
-                          boxShadow: `0 0 20px ${stepColors[i]}40`,
-                        } : undefined}
+                        style={active ? { backgroundColor: meta.color, boxShadow: `0 0 16px ${meta.color}35` } : undefined}
                       >
-                        {isFailed ? "!" : isDone ? "\u2713" : isActive ? (
-                          <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-white" />
+                        {done ? "\u2713" : failed ? "!" : active ? (
+                          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
                         ) : i + 1}
                       </div>
+                      <span className={`hidden text-[9px] sm:block ${active ? "font-medium text-[rgba(0,0,0,0.6)]" : "text-[rgba(0,0,0,0.25)]"}`}>
+                        {meta.label.split(" ").slice(0, 2).join(" ")}
+                      </span>
                     </div>
-                    {i < PHASE_ORDER.length - 2 && (
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Active status label */}
+            <p className="mt-5 text-center text-sm text-[rgba(0,0,0,0.5)]">
+              {PHASE_META[phase].label}
+              {simPhase && phase === "polling" && <span className="text-[rgba(0,0,0,0.3)]"> — {simPhase}</span>}
+            </p>
+
+            {/* ── Focus Group Visualization ── */}
+            {isSessionActive && (
+              <div className="mt-8">
+                {/* Persona circles */}
+                <div className="flex flex-wrap items-end justify-center gap-4">
+                  {personas.map((p, i) => {
+                    const visible = i < visiblePersonas;
+                    const speaking = activeSpeaker === i;
+                    return (
                       <div
-                        className="h-10 w-px transition-colors duration-700"
-                        style={{
-                          backgroundColor: isDone
-                            ? "rgb(167 243 208)"
-                            : isActive
-                              ? `${stepColors[i]}40`
-                              : "rgba(0,0,0,0.08)",
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div className="pb-10">
-                    <p className={`text-[0.9375rem] font-medium transition-colors duration-500 ${
-                      isFailed ? "text-[#FA3D1D]" : isDone ? "text-emerald-600" : isActive ? "text-[rgba(0,0,0,0.85)]" : "text-[rgba(0,0,0,0.3)]"
-                    }`}>
-                      {PHASE_LABELS[p]}
-                    </p>
-                    {isActive && p === "polling" && simPhase && (
-                      <p className="mt-0.5 animate-fade-in text-xs text-[rgba(0,0,0,0.4)]">Phase: {simPhase}</p>
-                    )}
-                  </div>
+                        key={p.initials}
+                        className="flex flex-col items-center gap-1.5 transition-all duration-500"
+                        style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(12px)" }}
+                      >
+                        <div className="relative">
+                          {/* Pulse ring when speaking */}
+                          {speaking && (
+                            <div className="absolute -inset-1.5 animate-ping rounded-full opacity-20" style={{ backgroundColor: p.color }} />
+                          )}
+                          <div
+                            className="flex h-10 w-10 items-center justify-center rounded-full font-[family-name:var(--font-mono)] text-[10px] font-bold text-white transition-shadow duration-300"
+                            style={{
+                              backgroundColor: p.color,
+                              boxShadow: speaking ? `0 0 24px ${p.color}50` : `0 2px 8px ${p.color}20`,
+                              transform: speaking ? "scale(1.15)" : "scale(1)",
+                              transition: "transform 0.3s, box-shadow 0.3s",
+                            }}
+                          >
+                            {p.initials}
+                          </div>
+                        </div>
+                        <span className={`text-[9px] font-medium transition-colors duration-300 ${speaking ? "text-[rgba(0,0,0,0.7)]" : "text-[rgba(0,0,0,0.3)]"}`}>
+                          {p.name.split(" ")[0]}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
 
-          {logs.length > 0 && (
-            <div className="mt-4 max-h-40 overflow-y-auto rounded-xl bg-[rgba(0,0,0,0.03)] px-4 py-3">
-              {logs.map((msg, i) => (
-                <div
-                  key={`${i}-${msg.slice(0, 20)}`}
-                  className="flex gap-2 py-[3px] text-[0.8125rem] leading-relaxed text-[rgba(0,0,0,0.55)] animate-fade-in"
-                >
-                  <span className="shrink-0 select-none text-[rgba(0,0,0,0.2)]">&rsaquo;</span>
-                  <span>{msg}</span>
+                {/* Active speaker indicator */}
+                <div className="mt-6 min-h-[52px]">
+                  {activePersona && (
+                    <div
+                      key={activeSpeaker}
+                      className="animate-fade-in rounded-2xl border border-[rgba(0,0,0,0.06)] bg-white px-4 py-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[8px] font-bold text-white"
+                          style={{ backgroundColor: activePersona.color }}
+                        >
+                          {activePersona.initials}
+                        </div>
+                        <p className="text-[12px] font-medium" style={{ color: activePersona.color }}>
+                          Discussing {activePersona.name.toLowerCase()}…
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                  {!activePersona && visiblePersonas >= personas.length && (
+                    <div className="flex items-center justify-center gap-1.5 py-4">
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-[rgba(0,0,0,0.15)]" style={{ animationDelay: "0ms" }} />
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-[rgba(0,0,0,0.15)]" style={{ animationDelay: "150ms" }} />
+                      <div className="h-1 w-1 animate-bounce rounded-full bg-[rgba(0,0,0,0.15)]" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  )}
                 </div>
-              ))}
-              <div ref={logEndRef} />
-            </div>
-          )}
-
-          {phase === "done" && (
-            <div className="mt-2 animate-fade-in rounded-2xl bg-emerald-50 p-4 text-center text-sm font-medium text-emerald-700">
-              Loading dashboard...
-            </div>
-          )}
-
-          {phase === "failed" && (
-            <div className="mt-2 animate-fade-in space-y-3">
-              <div className="rounded-2xl bg-[#FA3D1D]/8 p-4 text-sm text-[#D42E11]">
-                {error ?? "An unknown error occurred."}
               </div>
-              <button type="button" onClick={onError} className="btn-secondary w-full">
-                Start Over
-              </button>
-            </div>
-          )}
+            )}
+
+            {/* Log stream */}
+            {logs.length > 0 && (
+              <div className="mt-5 max-h-28 overflow-y-auto rounded-xl bg-[rgba(0,0,0,0.03)] px-4 py-3">
+                {logs.map((msg, i) => (
+                  <div key={`log-${i}`} className="flex gap-2 py-[2px] animate-fade-in">
+                    <span className="shrink-0 select-none text-[11px] text-[rgba(0,0,0,0.15)]">&rsaquo;</span>
+                    <span className="text-[11px] leading-relaxed text-[rgba(0,0,0,0.4)]">{msg}</span>
+                  </div>
+                ))}
+                <div ref={logEndRef} />
+              </div>
+            )}
+
+            {/* Done */}
+            {phase === "done" && (
+              <div className="mt-6 animate-fade-in rounded-2xl bg-emerald-50 p-4 text-center">
+                <p className="text-sm font-medium text-emerald-700">Analysis complete — loading dashboard</p>
+              </div>
+            )}
+
+            {/* Failed */}
+            {phase === "failed" && (
+              <div className="mt-6 animate-fade-in space-y-3">
+                <div className="rounded-2xl bg-[#FA3D1D]/8 p-4 text-sm text-[#D42E11]">
+                  {error ?? "An unknown error occurred."}
+                </div>
+                <button type="button" onClick={onError} className="btn-secondary w-full">Start Over</button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>

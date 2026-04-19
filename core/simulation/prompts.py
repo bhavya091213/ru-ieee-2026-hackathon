@@ -21,11 +21,13 @@ Retrieved evidence (cite these chunk IDs in your response):
 
 {discussion_context}
 
+Facets to evaluate: {facets}
+
 Instructions:
 - Provide your overall reaction to this product concept.
 - Rate your segment's adoption likelihood from 0 to 100.
 - Identify your strongest positive and strongest concern.
-- Score relevant features from 0.0 to 1.0.
+- In feature_scores, you MUST score each of these facets from 0.0 to 1.0: {facets}. Use exactly these keys.
 - Explain what would change your mind.
 - Provide one quotable sentence summarizing your position.
 - ALWAYS include cited_chunk_ids referencing evidence from above.

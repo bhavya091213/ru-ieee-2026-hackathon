@@ -96,37 +96,37 @@ export function ExplorePage({ projectId, productName, dashboard, onBack }: Explo
   }, []);
 
   useEffect(() => {
-    if (tab === "documents") {
+    if (tab === "documents" && projectId) {
       setLoading(true);
-      fetchData("/api/explore/documents").then((d) => {
+      fetchData(`/api/projects/${projectId}/explore/documents`).then((d) => {
         if (d) setDocs(d.documents || []);
         setLoading(false);
       });
     }
-  }, [tab, fetchData]);
+  }, [tab, projectId, fetchData]);
 
   useEffect(() => {
-    if (tab === "chunks") {
+    if (tab === "chunks" && projectId) {
       setLoading(true);
       const params = new URLSearchParams();
       if (facetFilter) params.set("facet", facetFilter);
       params.set("limit", "100");
-      fetchData(`/api/explore/chunks?${params}`).then((d) => {
+      fetchData(`/api/projects/${projectId}/explore/chunks?${params}`).then((d) => {
         if (d) { setChunks(d.chunks || []); setChunkTotal(d.total || 0); }
         setLoading(false);
       });
     }
-  }, [tab, facetFilter, fetchData]);
+  }, [tab, projectId, facetFilter, fetchData]);
 
   useEffect(() => {
-    if (tab === "graph") {
+    if (tab === "graph" && projectId) {
       setLoading(true);
-      fetchData("/api/explore/graph").then((d) => {
+      fetchData(`/api/projects/${projectId}/graph`).then((d) => {
         if (d) setGraph(d);
         setLoading(false);
       });
     }
-  }, [tab, fetchData]);
+  }, [tab, projectId, fetchData]);
 
   const tabs: { key: Tab; label: string; count?: number }[] = [
     { key: "documents", label: "Sources", count: docs.length },
@@ -196,7 +196,7 @@ export function ExplorePage({ projectId, productName, dashboard, onBack }: Explo
           <div className="animate-fade-in">
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <span className="text-sm text-[rgba(0,0,0,0.5)]">Filter:</span>
-              {["", "camera", "battery", "price", "design", "privacy", "ecosystem", "web_article", "reddit_post", "youtube"].map((f) => (
+              {["", ...Array.from(new Set(chunks.map((c) => c.facet))).sort()].map((f) => (
                 <button key={f} type="button" onClick={() => setFacetFilter(f)}
                   className={`rounded-full border px-3.5 py-1.5 text-xs font-medium capitalize transition ${facetFilter === f ? "border-[rgba(0,0,0,0.3)] bg-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.85)]" : "border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.45)] hover:bg-[rgba(0,0,0,0.04)]"}`}>
                   {f || "All"}

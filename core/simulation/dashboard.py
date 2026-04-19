@@ -96,23 +96,54 @@ def extract_quotes(
 
 def aggregate_feature_scores(
     round2_responses: list[PersonaResponse],
+    personas: list[Persona] | None = None,
+    facets: list[str] | None = None,
+    round1_responses: list[PersonaResponse] | None = None,
 ) -> dict[str, FeatureScoreRow]:
     facet_data: dict[str, dict[str, float]] = {}
 
-    for r in round2_responses:
-        for facet, score in r.feature_scores.items():
-            if facet not in facet_data:
-                facet_data[facet] = {}
-            facet_data[facet][r.persona_id] = score
+    persona_map: dict[str, Persona] = {}
+    if personas:
+        for p in personas:
+            persona_map[p.segment_label] = p
+
+    all_responses = list(round2_responses)
+    if round1_responses and all(not r.feature_scores for r in round2_responses):
+        all_responses = list(round1_responses)
+
+    for r in all_responses:
+        scores = r.feature_scores
+        if not scores:
+            p = persona_map.get(r.persona_id)
+            if not p:
+                for pp in (personas or []):
+                    if pp.segment_label == r.persona_id or r.persona_id in pp.segment_label:
+                        p = pp
+                        break
+            if p and p.feature_priorities:
+                scores = p.feature_priorities
+        for facet_key, score in scores.items():
+            if facet_key not in facet_data:
+                facet_data[facet_key] = {}
+            facet_data[facet_key][r.persona_id] = score
+
+    if facets:
+        for f in facets:
+            if f not in facet_data:
+                facet_data[f] = {}
+                for r in all_responses:
+                    facet_data[f][r.persona_id] = 0.5
 
     result: dict[str, FeatureScoreRow] = {}
-    for facet, persona_scores in facet_data.items():
-        scores = list(persona_scores.values())
-        std = statistics.stdev(scores) if len(scores) >= 2 else 0.0
-        result[facet] = FeatureScoreRow(
-            mean=statistics.mean(scores),
-            min=min(scores),
-            max=max(scores),
+    for facet_key, persona_scores in facet_data.items():
+        scores_list = list(persona_scores.values())
+        if not scores_list:
+            scores_list = [0.5]
+        std = statistics.stdev(scores_list) if len(scores_list) >= 2 else 0.0
+        result[facet_key] = FeatureScoreRow(
+            mean=statistics.mean(scores_list),
+            min=min(scores_list),
+            max=max(scores_list),
             std=std,
             persona_scores=persona_scores,
         )
@@ -168,6 +199,7 @@ def assemble_dashboard(
     moderator_question: ModeratorQuestion,
     analyst_summary: AnalystSummary,
     tribe_result: TribeResult | None = None,
+    facets: list[str] | None = None,
 ) -> DashboardPayload:
     likelihoods = [float(r.adoption_likelihood_0_100) for r in round2_responses]
 
@@ -179,7 +211,7 @@ def assemble_dashboard(
         evidence_coverage=compute_evidence_coverage(round2_responses),
         top_risks=_scored_labels(analyst_summary.top_risks),
         top_wins=_scored_labels(analyst_summary.top_wins),
-        feature_scores=aggregate_feature_scores(round2_responses),
+        feature_scores=aggregate_feature_scores(round2_responses, personas, facets, round1_responses),
         personas=build_persona_summaries(personas, round2_responses),
         quotes=extract_quotes(round2_responses, personas),
         round1_responses=round1_responses,

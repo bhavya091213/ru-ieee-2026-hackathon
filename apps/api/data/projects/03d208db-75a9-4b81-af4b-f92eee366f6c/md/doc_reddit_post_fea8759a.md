@@ -1,0 +1,33 @@
+---
+doc_id: doc_reddit_post_fea8759a
+canonical_product: new_in_ear_headphones
+source_type: reddit_post
+source_url: https://reddit.com/r/BudgetAudiophile/comments/1ph6ygx/bookshelf_speaker_recommendations/
+title: Bookshelf Speaker Recommendations
+published_at: '1765181268.0'
+author: Amazing-Parsley-2866
+language: en
+retrieved_at: '2026-04-19T16:50:07.275767Z'
+---
+
+Probably going to be a long-winded, typo-ridden post. I want you all to get the full-scope of my situation before giving suggestions. Skip to bottom for the summarized question. Apologies in advance.
+
+Room drawing above for space/setup reference. Carpet flooring. I have 2 fish tanks set up in the room, so I'm limited as to where I can move my desk. I could possibly move it to the opposite wall by moving the 20gal tank.
+
+My current (beginner) setup is an audio-technica lp60, sony STR-D911, Klipsch SW350, and my choice of Sony SS U560's or 42w Rockville bookshelf speakers. I really do not like how the Rockville's sound, and I know that the Sony's are a not much better. They did sound good to my ears, but I started listening to other systems, mainly Klipsch. I got the Rockvilles as a cheap fill in when I hit a dry spell on marketplace. I also didn't know anything about audiophilia. I think the Rockvilles are going on FB marketplace here pretty soon. Right now I have all the speakers on my desk. The sub is on the floor pretty much between my legs. I know the Sony's need to be on stands on the floor, but this room is a catch-all. I haven't taken the time to clear out a proper space for them. I used to be a basshead and liked anything that could be loud. I have a child now and can't really do loud in the house, nor do I really want to anymore lol. I only really use my setup at night once everyone else is asleep, so I never turn the volume over 2. I've really started liking more refined sound with crisp highs and warm lows (don't we all...) My hearing kinda sucks already at only 23yrs old.
+My favorite genres are grunge, post-grunge, Rock (basically anything 60's-90's, mainly 90's, even some early 2000's), a little bit of metal, old country (90's and earlier). I listen to just about anything at some point or another. Most of my record collection is Alice in Chains, Eric Clapton, and Bob Segar. Pretty new to vinyl, so I haven't ventured out too much yet. Skynyrd is on my list, but I haven't found any at my local shops yet. I prefer to buy used for the financial aspect, as well as the collector aspect. 
+
+So now to the speakers
+I love the way Klipsch sounds, I have several friends with different versions. I've listened to rp-600 floor-standing speakers, a 2.1 reference soundbar, promedia 2.1, and r40m bookshelf speakers. They all sound incredible in their own applications. I've listened to a Polk 5.1 system at another friend's house, but they just didn't seem to resonate with my ears well. I've heard that older JBL models are fantastic for rock, as well as a few makers from Canada or Massachusetts.  Basically, I know to avoid Japanese speakers. I'm sure there's a few great models, but I don't know enough to find them. I heard that companies that mainly produce speakers are the best, rather than the ones that make everything under the sun (*cough*, Yamaha)
+My Sony speakers have a pretty full sound at low volumes in my opinion, but they are too big for my space. My concern is spending money on a pair of "top brand" bookshelf speakers and being disappointed because they don't fill in the all frequencies like the oversized Sony's do. I think this could be because my Rockville speakers just suck, objectively speaking. I have my sub wired in with the Rockvilles to help fill gaps in low frequencies, but I can't crank it up enough to really get much out of it. 
+I think bookshelf speakers are going to fit my situation the best since I have limited floorspace.  
+I basically want three-way sound out of bookshelf speakers... My budget would be around $200, preferably less. I'm most likely looking to buy used, so I can get better quality speakers at a lower price. I wouldn't be opposed to getting a new set, but I like to save where I can. I want a full sound at low volumes, while also being able to turn it up a bit for the few times I can. I don't want the highs to sound like dog whistles. I want them to be crisp. I like warm lows, but it could be hard to find both in a bookshelf speaker on a budget. 
+I've seen Klipsch r40/41, 50/51's for sale around or under $200, but I would need to give them another listen to justify buying new. I'm generally skeptical of any new technology, especially post-covid. 
+
+Why does it seem like headphones would be the best fit🤦🏼‍♂️ I just move around too much in that room for wired headphones, and I need to be able to hear my kid.
+
+For anyone who read even a quarter of that: thank you, and I'm sorry. lol. 
+
+Summarized: 
+Looking for bookshelf speaker recommendations $200 or less, preferably used to get more value, full sound at lower volumes with occasional jam sessions. 
+

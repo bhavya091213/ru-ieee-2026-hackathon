@@ -4,16 +4,14 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-Facet = Literal["camera", "battery", "price", "design", "privacy", "ecosystem", "other"]
+Facet = str
 Stance = Literal["positive", "negative", "mixed", "rumor", "review"]
 EntityType = Literal["Product", "Feature", "Concern", "Competitor", "Segment", "Claim"]
 RelationshipType = Literal[
     "MENTIONS", "SUPPORTS", "CONTRADICTS", "COMPARES_TO", "CO_OCCURS_WITH"
 ]
 
-VALID_FACETS: frozenset[str] = frozenset(
-    ["camera", "battery", "price", "design", "privacy", "ecosystem", "other"]
-)
+VALID_FACETS: frozenset[str] = frozenset()
 
 
 class RawDocument(BaseModel):

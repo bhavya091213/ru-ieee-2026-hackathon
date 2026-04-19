@@ -123,7 +123,8 @@ def _fetch_via_public_json(
         "q": query,
         "restrict_sr": "on",
         "sort": "relevance",
-        "limit": min(max_posts, 25),
+        "limit": min(max_posts, 50),
+        "t": "year",
     }
     logger.info("Reddit JSON search: %s  params=%s", search_url, params)
 

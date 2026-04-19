@@ -49,6 +49,7 @@ def _build_round1_prompt(
         f"\"{r.text if hasattr(r, 'text') else r['text']}\""
         for r in evidence
     )
+    facets = ", ".join(scenario.facets_to_explore) if scenario.facets_to_explore else "general"
     return PANEL_RESPONSE_PROMPT.format(
         segment_label=persona.segment_label,
         product_name=scenario.product_name,
@@ -57,6 +58,7 @@ def _build_round1_prompt(
         persona_json=persona.model_dump_json(indent=2),
         evidence_chunks=evidence_text,
         discussion_context="",
+        facets=facets,
     )
 
 
@@ -87,6 +89,7 @@ def _build_round2_prompt(
         "Update your position if the evidence warrants it. Explain what changed and why."
     )
 
+    facets = ", ".join(scenario.facets_to_explore) if scenario.facets_to_explore else "general"
     return PANEL_RESPONSE_PROMPT.format(
         segment_label=persona.segment_label,
         product_name=scenario.product_name,
@@ -95,6 +98,7 @@ def _build_round2_prompt(
         persona_json=persona.model_dump_json(indent=2),
         evidence_chunks=evidence_text,
         discussion_context=discussion,
+        facets=facets,
     )
 
 
@@ -103,7 +107,21 @@ async def _fan_out_persona_calls(
     build_prompt: Callable[[Persona], str],
     semaphore: asyncio.Semaphore,
     temperature: float = 0.2,
+    facet_list: list[str] | None = None,
 ) -> list[PersonaResponse]:
+    schema_hints: dict[str, dict] | None = None
+    if facet_list:
+        schema_hints = {
+            "feature_scores": {
+                "title": "Feature Scores",
+                "type": "object",
+                "properties": {
+                    f: {"type": "number"} for f in facet_list
+                },
+                "required": list(facet_list),
+            }
+        }
+
     results: list[PersonaResponse] = [None] * len(personas)  # type: ignore[list-item]
 
     async def _call(idx: int, persona: Persona) -> None:
@@ -113,6 +131,7 @@ async def _fan_out_persona_calls(
                 prompt=prompt,
                 response_schema=PersonaResponse,
                 temperature=temperature,
+                schema_hints=schema_hints,
             )
             results[idx] = resp
 
@@ -154,9 +173,12 @@ async def round1_phase(state: SimulationState) -> SimulationState:
         evidence = state.retrieved_evidence.get(persona.segment_label, [])
         return _build_round1_prompt(persona, state.scenario, evidence)
 
+    facets = state.scenario.facets_to_explore or None
+
     try:
         responses = await _fan_out_persona_calls(
-            state.personas, build_prompt, semaphore, temperature=0.2
+            state.personas, build_prompt, semaphore, temperature=0.2,
+            facet_list=facets,
         )
     except Exception as exc:
         return state.transition(phase=SimPhase.FAILED, error=str(exc))
@@ -188,9 +210,12 @@ async def round2_phase(state: SimulationState) -> SimulationState:
             state.round1_responses, state.moderator_question,
         )
 
+    facets = state.scenario.facets_to_explore or None
+
     try:
         responses = await _fan_out_persona_calls(
-            state.personas, build_prompt, semaphore, temperature=0.2
+            state.personas, build_prompt, semaphore, temperature=0.2,
+            facet_list=facets,
         )
     except Exception as exc:
         return state.transition(phase=SimPhase.FAILED, error=str(exc))

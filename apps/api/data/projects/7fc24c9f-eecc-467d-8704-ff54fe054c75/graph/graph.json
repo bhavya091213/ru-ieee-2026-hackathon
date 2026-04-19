@@ -1,0 +1,330 @@
+{
+  "nodes": [
+    {
+      "id": "performance_which",
+      "title": "which",
+      "type": "Feature",
+      "description": "Keyword 'which' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_client",
+      "title": "client",
+      "type": "Feature",
+      "description": "Keyword 'client' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_performance",
+      "title": "performance",
+      "type": "Feature",
+      "description": "Keyword 'performance' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_cores",
+      "title": "cores",
+      "type": "Feature",
+      "description": "Keyword 'cores' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_tensor",
+      "title": "tensor",
+      "type": "Feature",
+      "description": "Keyword 'tensor' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "price_going",
+      "title": "going",
+      "type": "Feature",
+      "description": "Keyword 'going' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_also",
+      "title": "also",
+      "type": "Feature",
+      "description": "Keyword 'also' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_upgrade",
+      "title": "upgrade",
+      "type": "Feature",
+      "description": "Keyword 'upgrade' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "other_already",
+      "title": "already",
+      "type": "Claim",
+      "description": "Keyword 'already' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_msrp",
+      "title": "msrp",
+      "type": "Claim",
+      "description": "Keyword 'msrp' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_woohoooooo",
+      "title": "woohoooooo",
+      "type": "Claim",
+      "description": "Keyword 'woohoooooo' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_connector",
+      "title": "connector",
+      "type": "Claim",
+      "description": "Keyword 'connector' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_melted",
+      "title": "melted",
+      "type": "Claim",
+      "description": "Keyword 'melted' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "software_series",
+      "title": "series",
+      "type": "Feature",
+      "description": "Keyword 'series' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_super",
+      "title": "super",
+      "type": "Feature",
+      "description": "Keyword 'super' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_ever",
+      "title": "ever",
+      "type": "Feature",
+      "description": "Keyword 'ever' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_happened",
+      "title": "happened",
+      "type": "Feature",
+      "description": "Keyword 'happened' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_release",
+      "title": "release",
+      "type": "Feature",
+      "description": "Keyword 'release' from software discussions",
+      "community": "community-software"
+    }
+  ],
+  "edges": [
+    {
+      "source": "performance_which",
+      "target": "performance_client",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_which",
+      "target": "performance_performance",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_which",
+      "target": "performance_cores",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_which",
+      "target": "performance_tensor",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_client",
+      "target": "performance_performance",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_client",
+      "target": "performance_cores",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_client",
+      "target": "performance_tensor",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_cores",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_tensor",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_cores",
+      "target": "performance_tensor",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_going",
+      "target": "price_also",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_going",
+      "target": "price_upgrade",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_also",
+      "target": "price_upgrade",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_already",
+      "target": "other_msrp",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_already",
+      "target": "other_woohoooooo",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_already",
+      "target": "other_connector",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_already",
+      "target": "other_melted",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_msrp",
+      "target": "other_woohoooooo",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_msrp",
+      "target": "other_connector",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_msrp",
+      "target": "other_melted",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_woohoooooo",
+      "target": "other_connector",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_woohoooooo",
+      "target": "other_melted",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_connector",
+      "target": "other_melted",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_series",
+      "target": "software_super",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_series",
+      "target": "software_ever",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_series",
+      "target": "software_happened",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_series",
+      "target": "software_release",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_super",
+      "target": "software_ever",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_super",
+      "target": "software_happened",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_super",
+      "target": "software_release",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_ever",
+      "target": "software_happened",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_ever",
+      "target": "software_release",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_happened",
+      "target": "software_release",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    }
+  ]
+}

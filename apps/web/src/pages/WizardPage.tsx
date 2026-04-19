@@ -42,12 +42,21 @@ export function WizardPage({ onSubmit, onBack }: WizardPageProps) {
 
   const handleSuggestFacets = async () => {
     setLoadingFacets(true);
-    const urls = seedUrls.split("\n").map((u) => u.trim()).filter(Boolean);
-    const result = await suggestFacets(productName, description, urls);
-    const suggested = result.data.facets;
-    setSuggestedFacets(suggested);
-    setFacets(suggested);
-    setLoadingFacets(false);
+    setError(null);
+    try {
+      const urls = seedUrls.split("\n").map((u) => u.trim()).filter(Boolean);
+      const result = await suggestFacets(productName, description, urls);
+      const suggested = result.data.facets;
+      setSuggestedFacets(suggested);
+      setFacets(suggested);
+      if (result.dataSource === "mock") {
+        setError("Could not reach AI — showing default facets. You can edit them or retry.");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to suggest facets");
+    } finally {
+      setLoadingFacets(false);
+    }
   };
 
   const canProceed = () => {

@@ -83,7 +83,7 @@ async def _run_simulation_task(
         app_state.sim_status[project_id] = {
             "phase": "CLUSTERING", "error": None, "done": False
         }
-        target = (3, min(6, max(3, len(chunks_for_clustering) // 3)))
+        target = (4, min(7, max(4, len(chunks_for_clustering) // 5)))
         clusters = await cluster_chunks(chunks_for_clustering, target_range=target)
         log(f"Found {len(clusters)} persona clusters")
 
@@ -93,30 +93,30 @@ async def _run_simulation_task(
         }
         personas = await synthesize_personas(clusters)
 
-        if not personas:
+        MIN_PERSONAS = 4
+        if len(personas) < MIN_PERSONAS:
             chunk_ids = [c["id"] for c in chunks_for_clustering[:2]]
-            personas = [
-                Persona(
-                    segment_label=f"Segment-{i}",
-                    summary=f"Auto-generated persona {i}",
-                    jobs_to_be_done=["evaluate product"],
-                    feature_priorities={"camera": 0.7, "price": 0.5},
-                    beliefs=[
-                        Belief(
-                            claim="Product seems interesting",
-                            stance="mixed",
-                            evidence_chunk_ids=chunk_ids,
-                        )
-                    ],
-                    skepticism_profile=SkepticismProfile(
-                        trust_in_reviews=0.6,
-                        trust_in_brand_claims=0.4,
-                        influencer_susceptibility=0.5,
-                    ),
-                    graph_entity_ids=[],
-                )
-                for i in range(3)
+            facet_list = scenario.facets_to_explore or ["general"]
+            archetypes = [
+                ("Early Adopter", "Embraces new technology, willing to pay premium for cutting-edge features", 0.8),
+                ("Budget-Conscious Buyer", "Prioritizes value for money, skeptical of premium pricing", 0.3),
+                ("Power User", "Demands top performance, deeply technical evaluation", 0.7),
+                ("Casual Consumer", "Mainstream user, cares about ease of use and brand trust", 0.5),
+                ("Skeptical Reviewer", "Questions marketing claims, relies heavily on independent reviews", 0.4),
             ]
+            for i in range(len(personas), MIN_PERSONAS):
+                arch = archetypes[i % len(archetypes)]
+                priorities = {f: round(max(0.1, min(1.0, arch[2] + 0.15 * ((hash(f + str(i)) % 5) - 2))), 2) for f in facet_list}
+                personas.append(Persona(
+                    segment_label=arch[0],
+                    summary=f"{arch[1]} — evaluating {scenario.product_name}",
+                    jobs_to_be_done=[f"evaluate {scenario.product_name}"],
+                    feature_priorities=priorities,
+                    beliefs=[Belief(claim=f"{scenario.product_name} needs thorough evaluation", stance="mixed", evidence_chunk_ids=chunk_ids)],
+                    skepticism_profile=SkepticismProfile(trust_in_reviews=arch[2], trust_in_brand_claims=1.0 - arch[2], influencer_susceptibility=0.5),
+                    graph_entity_ids=[],
+                ))
+            log(f"Supplemented to {len(personas)} personas (minimum {MIN_PERSONAS})")
 
         labels = [p.segment_label for p in personas]
         log(f"Created {len(personas)} personas: {', '.join(labels)}")
@@ -190,6 +190,7 @@ async def _run_simulation_task(
                 moderator_question=final_state.moderator_question,
                 analyst_summary=final_state.analyst_summary,
                 tribe_result=final_state.tribe_result,
+                facets=scenario.facets_to_explore,
             )
             project = app_state.projects.get(project_id)
             if project:

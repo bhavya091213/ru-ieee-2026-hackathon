@@ -141,18 +141,26 @@ export async function fetchProgressLogs(
   );
 }
 
-export function suggestFacets(
+export async function suggestFacets(
   productName: string,
   description: string = "",
   seedUrls: string[] = [],
 ): Promise<ApiResult<{ facets: string[] }>> {
-  return fetchWithFallback(
-    "/api/suggest-facets",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ product_name: productName, description, seed_urls: seedUrls }),
-    },
-    { facets: ["camera", "battery", "price", "design", "performance", "software"] },
-  );
+  try {
+    const data = await fetchStrict<{ facets: string[] }>(
+      "/api/suggest-facets",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product_name: productName, description, seed_urls: seedUrls }),
+      },
+      30_000,
+    );
+    return { data, dataSource: "live" };
+  } catch {
+    return {
+      data: { facets: ["price", "quality", "usability", "performance", "design", "value"] },
+      dataSource: "mock",
+    };
+  }
 }

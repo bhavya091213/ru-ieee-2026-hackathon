@@ -54,8 +54,7 @@ export function useProject() {
       setStatus("simulating");
       setProgress({ stage: "Starting simulation...", percent: null });
 
-      const facets = ["camera", "battery", "price", "design", "privacy", "ecosystem"];
-      await runSimulation(nextProjectId, name, hypotheses.join("; "), hypotheses, facets);
+      await runSimulation(nextProjectId, name, hypotheses.join("; "), hypotheses, []);
 
       stopPolling();
       pollRef.current = setInterval(async () => {

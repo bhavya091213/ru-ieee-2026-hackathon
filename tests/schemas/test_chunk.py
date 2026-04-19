@@ -52,9 +52,9 @@ class TestChunkExtractionRoundtrip:
         restored = ChunkExtraction.model_validate(data)
         assert restored == original
 
-    def test_rejects_invalid_facet(self):
-        with pytest.raises(ValidationError):
-            _make_chunk(facet="invalid_facet")
+    def test_accepts_any_facet_string(self):
+        chunk = _make_chunk(facet="gpu_performance")
+        assert chunk.facet == "gpu_performance"
 
     def test_rejects_invalid_stance(self):
         with pytest.raises(ValidationError):

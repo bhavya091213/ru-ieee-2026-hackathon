@@ -1,0 +1,29 @@
+---
+doc_id: doc_reddit_post_b58c799f
+canonical_product: new_in_ear_headphones
+source_type: reddit_post
+source_url: https://reddit.com/r/headphones/comments/1qxrrf0/new_to_all_of_this/
+title: New to all of this
+published_at: '1770407077.0'
+author: Josh_227
+language: en
+retrieved_at: '2026-04-19T17:01:22.936501Z'
+---
+
+New here, Hello! 
+
+This week I received what I would call my first real set of headphones. I've been using gaming headsets for far longer than I'd like to admit. about 3 year's ago I switched over to my first set of iems and have been using iems ever since. In my opinion any iem I have used have been far superior to any gaming headset ive tried. 
+
+My only gripe with iems is that with long gaming sessions they can start to irritate my ears a little. Not a huge complete and I understand breaks are needed. 
+
+With that being said I started looking into open back headphones, something I've never experienced. After reading/watching many reviews i finally went with Sennheiser hd 490 pro. The main thing that stuck out in all the reviews was comfort. Boy do I agree with this. I can barely tell i have them on huge plus! 
+
+I bought these with gaming in mind as thats what I mainly do in my free time at night and 90 percent of the time I'm sitting at my desk. I'm clearly not an audiophile nor will I likely never be but since this purchase I've been listening to more music than gaming! Maybe because I've never experienced open back before, or maybe all just my cheap headsets in the past but these sound fantastic to my ears. Gaming is fantastic as well. Hard to explain since of the lack of audiophile in me but there is just something I would call "airy" to me. Or I guess open? Not all just shoved down my eardrums. 
+
+I've tried both pads several times and my taste is the mixing pads are far superior. For both music and gaming. The producer pads so feel more comfortable when you initially put them on but they are also make my ears warm pretty quick. The mixing pads are also very comfortable in my opinion and don't squeeze on your ears as tight which I like. I slightly eq them for music but leave them alone for gaming. 
+
+I don't think (hope) I'm the type of person who will fall down the rabbit hole and need the next set of headphones. These sound pretty great to me! 
+
+Im using an entry level dac/amp Fosi k5 pro which works great with the 490 pro for me. Any other dac/amps i should look into or waste of money right now? I know there easy to run as ive also used them with an old corsair dac i had laying around. 
+
+I also just recieved my custom cable from Fog City Audio today. I think it looks fantastic and the quality is great. I received a shipping notification within about two hours after purchase and received it 2 days after purchase. All the way across the united states. I would highly suggest checking them out if you're are looking. 
