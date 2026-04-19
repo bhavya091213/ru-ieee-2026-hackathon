@@ -4,8 +4,9 @@ import { LandingPage } from "./pages/LandingPage";
 import { WizardPage } from "./pages/WizardPage";
 import { SimulationPage } from "./pages/SimulationPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { ExplorePage } from "./pages/ExplorePage";
 
-type Page = "landing" | "wizard" | "simulation" | "dashboard";
+type Page = "landing" | "wizard" | "simulation" | "dashboard" | "explore";
 
 export interface ProjectContext {
   projectId: string | null;
@@ -59,12 +60,24 @@ export default function App() {
     );
   }
 
+  if (page === "explore") {
+    return (
+      <ExplorePage
+        projectId={project.projectId}
+        productName={project.productName}
+        dashboard={null}
+        onBack={() => setPage("dashboard")}
+      />
+    );
+  }
+
   if (page === "dashboard") {
     return (
       <DashboardPage
         projectId={project.projectId}
         productName={project.productName}
         onNewStudy={reset}
+        onExplore={() => setPage("explore")}
       />
     );
   }

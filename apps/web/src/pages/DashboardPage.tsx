@@ -13,12 +13,13 @@ interface DashboardPageProps {
   projectId: string | null;
   productName: string;
   onNewStudy: () => void;
+  onExplore?: () => void;
 }
 
 const TABS = ["Overview", "Personas", "Evidence", "Insights"] as const;
 type Tab = (typeof TABS)[number];
 
-export function DashboardPage({ projectId, productName, onNewStudy }: DashboardPageProps) {
+export function DashboardPage({ projectId, productName, onNewStudy, onExplore }: DashboardPageProps) {
   const { data, dataSource, loading } = useDashboard(projectId);
   const [tab, setTab] = useState<Tab>("Overview");
 
@@ -65,9 +66,16 @@ export function DashboardPage({ projectId, productName, onNewStudy }: DashboardP
               <span>{data.tribe?.enabled ? "TRIBE active" : "TRIBE off"}</span>
             </div>
           </div>
-          <button type="button" onClick={onNewStudy} className="btn-secondary text-sm">
-            New Study
-          </button>
+          <div className="flex gap-2">
+            {onExplore && (
+              <button type="button" onClick={onExplore} className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 transition hover:bg-blue-100">
+                Explore Data
+              </button>
+            )}
+            <button type="button" onClick={onNewStudy} className="btn-secondary text-sm">
+              New Study
+            </button>
+          </div>
         </div>
 
         {/* Tabs */}
