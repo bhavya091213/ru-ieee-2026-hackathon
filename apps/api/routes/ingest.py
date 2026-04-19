@@ -125,19 +125,55 @@ async def _ingest_sources(
         chunk_documents, md_dir, chunks_path, canonical_product
     )
 
-    if chunks:
-        import config as _config
+    if not chunks:
+        return {"source_count": doc_count, "chunk_count": 0}
 
-        settings = _config.get_settings()
-        embedder = GeminiEmbedder(api_key=settings.GEMINI_API_KEY)
-        store = VectorStore(
-            embedder=embedder,
-            persist_dir=f"{data_dir}/chroma",
-            collection_name=canonical_product,
+    import config as _config
+    from google import genai
+
+    settings = _config.get_settings()
+    embedder = GeminiEmbedder(api_key=settings.GEMINI_API_KEY)
+    store = VectorStore(
+        embedder=embedder,
+        persist_dir=f"{data_dir}/chroma",
+        collection_name=canonical_product,
+    )
+    await asyncio.to_thread(store.add_chunks, chunks)
+
+    entity_count = 0
+    community_count = 0
+    try:
+        from core.indexing.graph_builder import run_extraction_pipeline
+
+        client = genai.Client(api_key=settings.GEMINI_API_KEY)
+        graph = await asyncio.to_thread(
+            run_extraction_pipeline,
+            Path(chunks_path),
+            Path(data_dir),
+            client,
+            None,
+            canonical_product,
         )
-        await asyncio.to_thread(store.add_chunks, chunks)
+        entity_count = len(graph.nodes) if graph else 0
 
-    return {"source_count": doc_count, "chunk_count": len(chunks)}
+        if graph and len(graph.nodes) > 1:
+            from core.indexing.communities import detect_communities
+            from core.indexing.graph_parquet import export_parquet
+
+            await asyncio.to_thread(export_parquet, graph, chunks, f"{data_dir}/graph")
+            result = await asyncio.to_thread(
+                detect_communities, graph, f"{data_dir}/graph", client
+            )
+            community_count = result.get("num_communities", {}).get("1.0", 0)
+    except Exception as exc:
+        logger.warning("Graph extraction/community detection failed: %s", exc)
+
+    return {
+        "source_count": doc_count,
+        "chunk_count": len(chunks),
+        "entity_count": entity_count,
+        "community_count": community_count,
+    }
 
 
 @router.post("/projects/{project_id}/ingest")
