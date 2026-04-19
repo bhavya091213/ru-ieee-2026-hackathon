@@ -185,7 +185,12 @@ async def ingest(project_id: str, body: IngestRequest, request: Request):
     canonical = _slugify(body.product_name or project.name)
     data_dir = str(Path("data"))
 
-    result = await _ingest_sources(body.sources, canonical, data_dir)
+    try:
+        result = await _ingest_sources(body.sources, canonical, data_dir)
+    except Exception as exc:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(500, detail=f"Ingest failed: {str(exc)[:200]}")
 
     updated = project.model_copy(update={
         "source_count": result["source_count"],
@@ -198,4 +203,4 @@ async def ingest(project_id: str, body: IngestRequest, request: Request):
         request.app.state.project_products = {}
     request.app.state.project_products[project_id] = canonical
 
-    return {"source_count": result["source_count"], "chunk_count": result["chunk_count"]}
+    return result
