@@ -1,0 +1,54 @@
+{
+  "community-other": {
+    "id": "community-other",
+    "title": "Other",
+    "summary": "Discussion cluster around other",
+    "entity_ids": [
+      "other_will",
+      "other_would",
+      "other_giphy"
+    ]
+  },
+  "community-software": {
+    "id": "community-software",
+    "title": "Software",
+    "summary": "Discussion cluster around software",
+    "entity_ids": [
+      "software_will",
+      "software_nvidia"
+    ]
+  },
+  "community-performance": {
+    "id": "community-performance",
+    "title": "Performance",
+    "summary": "Discussion cluster around performance",
+    "entity_ids": [
+      "performance_gaming",
+      "performance_performance",
+      "performance_would",
+      "performance_card"
+    ]
+  },
+  "community-design": {
+    "id": "community-design",
+    "title": "Design",
+    "summary": "Discussion cluster around design",
+    "entity_ids": [
+      "design_rubin",
+      "design_https",
+      "design_nvidia",
+      "design_year",
+      "design_next"
+    ]
+  },
+  "community-price": {
+    "id": "community-price",
+    "title": "Price",
+    "summary": "Discussion cluster around price",
+    "entity_ids": [
+      "price_will",
+      "price_even",
+      "price_going"
+    ]
+  }
+}

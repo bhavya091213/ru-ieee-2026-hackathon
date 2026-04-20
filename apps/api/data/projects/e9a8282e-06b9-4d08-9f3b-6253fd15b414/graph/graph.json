@@ -1,0 +1,417 @@
+{
+  "nodes": [
+    {
+      "id": "software_sound",
+      "title": "sound",
+      "type": "Feature",
+      "description": "Keyword 'sound' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_them",
+      "title": "them",
+      "type": "Feature",
+      "description": "Keyword 'them' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "design_sound",
+      "title": "sound",
+      "type": "Feature",
+      "description": "Keyword 'sound' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_them",
+      "title": "them",
+      "type": "Feature",
+      "description": "Keyword 'them' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "camera_easily",
+      "title": "easily",
+      "type": "Feature",
+      "description": "Keyword 'easily' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_take",
+      "title": "take",
+      "type": "Feature",
+      "description": "Keyword 'take' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_grills",
+      "title": "grills",
+      "type": "Feature",
+      "description": "Keyword 'grills' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_wanna",
+      "title": "wanna",
+      "type": "Feature",
+      "description": "Keyword 'wanna' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "camera_snap",
+      "title": "snap",
+      "type": "Feature",
+      "description": "Keyword 'snap' from camera discussions",
+      "community": "community-camera"
+    },
+    {
+      "id": "other_headphones",
+      "title": "headphones",
+      "type": "Claim",
+      "description": "Keyword 'headphones' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_sound",
+      "title": "sound",
+      "type": "Claim",
+      "description": "Keyword 'sound' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_them",
+      "title": "them",
+      "type": "Claim",
+      "description": "Keyword 'them' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "price_sound",
+      "title": "sound",
+      "type": "Feature",
+      "description": "Keyword 'sound' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_good",
+      "title": "good",
+      "type": "Feature",
+      "description": "Keyword 'good' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_speakers",
+      "title": "speakers",
+      "type": "Feature",
+      "description": "Keyword 'speakers' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "performance_them",
+      "title": "them",
+      "type": "Feature",
+      "description": "Keyword 'them' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_music",
+      "title": "music",
+      "type": "Feature",
+      "description": "Keyword 'music' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_setup",
+      "title": "setup",
+      "type": "Feature",
+      "description": "Keyword 'setup' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_live",
+      "title": "live",
+      "type": "Feature",
+      "description": "Keyword 'live' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "battery_will",
+      "title": "will",
+      "type": "Feature",
+      "description": "Keyword 'will' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "battery_would",
+      "title": "would",
+      "type": "Feature",
+      "description": "Keyword 'would' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "battery_first",
+      "title": "first",
+      "type": "Feature",
+      "description": "Keyword 'first' from battery discussions",
+      "community": "community-battery"
+    },
+    {
+      "id": "privacy_redact",
+      "title": "redact",
+      "type": "Feature",
+      "description": "Keyword 'redact' from privacy discussions",
+      "community": "community-privacy"
+    },
+    {
+      "id": "privacy_specific",
+      "title": "specific",
+      "type": "Feature",
+      "description": "Keyword 'specific' from privacy discussions",
+      "community": "community-privacy"
+    },
+    {
+      "id": "privacy_post",
+      "title": "post",
+      "type": "Feature",
+      "description": "Keyword 'post' from privacy discussions",
+      "community": "community-privacy"
+    },
+    {
+      "id": "privacy_removed",
+      "title": "removed",
+      "type": "Feature",
+      "description": "Keyword 'removed' from privacy discussions",
+      "community": "community-privacy"
+    },
+    {
+      "id": "privacy_using",
+      "title": "using",
+      "type": "Feature",
+      "description": "Keyword 'using' from privacy discussions",
+      "community": "community-privacy"
+    }
+  ],
+  "edges": [
+    {
+      "source": "software_sound",
+      "target": "software_them",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_sound",
+      "target": "design_them",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_easily",
+      "target": "camera_take",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_easily",
+      "target": "camera_grills",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_easily",
+      "target": "camera_wanna",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_easily",
+      "target": "camera_snap",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_take",
+      "target": "camera_grills",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_take",
+      "target": "camera_wanna",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_take",
+      "target": "camera_snap",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_grills",
+      "target": "camera_wanna",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_grills",
+      "target": "camera_snap",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "camera_wanna",
+      "target": "camera_snap",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_headphones",
+      "target": "other_sound",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_headphones",
+      "target": "other_them",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_sound",
+      "target": "other_them",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_sound",
+      "target": "price_good",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_sound",
+      "target": "price_speakers",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_good",
+      "target": "price_speakers",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_them",
+      "target": "performance_music",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_them",
+      "target": "performance_setup",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_them",
+      "target": "performance_live",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_music",
+      "target": "performance_setup",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_music",
+      "target": "performance_live",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_setup",
+      "target": "performance_live",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_will",
+      "target": "battery_would",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_will",
+      "target": "battery_first",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "battery_would",
+      "target": "battery_first",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_redact",
+      "target": "privacy_specific",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_redact",
+      "target": "privacy_post",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_redact",
+      "target": "privacy_removed",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_redact",
+      "target": "privacy_using",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_specific",
+      "target": "privacy_post",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_specific",
+      "target": "privacy_removed",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_specific",
+      "target": "privacy_using",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_post",
+      "target": "privacy_removed",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_post",
+      "target": "privacy_using",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "privacy_removed",
+      "target": "privacy_using",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    }
+  ]
+}

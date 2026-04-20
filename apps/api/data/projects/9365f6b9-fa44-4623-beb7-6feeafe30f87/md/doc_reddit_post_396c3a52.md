@@ -1,0 +1,21 @@
+---
+doc_id: doc_reddit_post_396c3a52
+canonical_product: new_in_ear_headphones
+source_type: reddit_post
+source_url: https://reddit.com/r/audiophile/comments/1lsha3z/expert_says_to_put_speakers_against_the_back_wall/
+title: Expert says to put speakers against the back wall. What the heck?
+published_at: '1751741941.0'
+author: slartibartfast64
+language: en
+retrieved_at: '2026-04-19T18:56:04.387194Z'
+---
+
+One of the most repeated comments here when people post pictures of their setups is "pull those speakers away from that back wall!". This is also what I have always understood to be the conventional wisdom and what I've done in the past. But I just watched this video from a guy who is apparently a very respected expert in setting up mixing studios:
+
+https://www.youtube.com/watch?v=akFeOhC5HMM
+
+In the middle of a bunch of stuff that was waaay over my head technically, he pretty clearly says that putting speakers a couple feet away from the back wall is a very common but terrible mistake, and that if you can't install your speakers in the wall like he did in his studio you should at least have them smack right up against the back wall. So now I'm baffled.
+
+I know the bottom line is always to try things out and use your ears as the final judge, but I can't do that at the moment. My house is in the middle of a huge renovation and I will have a whole new listening space when that's done. Meanwhile I'm stuck with headphones plugged into my computer and I'm spending a lot of time reading and researching so I'll be able to do a good job setting up my new room. I plan to buy a UMIK-1 and use REW to help with that, but meanwhile like I said I'm just researching. 
+
+So what's the deal with this apparently contradictory advice?

@@ -1,0 +1,263 @@
+{
+  "nodes": [
+    {
+      "id": "other_will",
+      "title": "will",
+      "type": "Claim",
+      "description": "Keyword 'will' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_would",
+      "title": "would",
+      "type": "Claim",
+      "description": "Keyword 'would' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "other_giphy",
+      "title": "giphy",
+      "type": "Claim",
+      "description": "Keyword 'giphy' from other discussions",
+      "community": "community-other"
+    },
+    {
+      "id": "software_will",
+      "title": "will",
+      "type": "Feature",
+      "description": "Keyword 'will' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "software_nvidia",
+      "title": "nvidia",
+      "type": "Feature",
+      "description": "Keyword 'nvidia' from software discussions",
+      "community": "community-software"
+    },
+    {
+      "id": "performance_gaming",
+      "title": "gaming",
+      "type": "Feature",
+      "description": "Keyword 'gaming' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_performance",
+      "title": "performance",
+      "type": "Feature",
+      "description": "Keyword 'performance' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_would",
+      "title": "would",
+      "type": "Feature",
+      "description": "Keyword 'would' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "performance_card",
+      "title": "card",
+      "type": "Feature",
+      "description": "Keyword 'card' from performance discussions",
+      "community": "community-performance"
+    },
+    {
+      "id": "design_rubin",
+      "title": "rubin",
+      "type": "Feature",
+      "description": "Keyword 'rubin' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_https",
+      "title": "https",
+      "type": "Feature",
+      "description": "Keyword 'https' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_nvidia",
+      "title": "nvidia",
+      "type": "Feature",
+      "description": "Keyword 'nvidia' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_year",
+      "title": "year",
+      "type": "Feature",
+      "description": "Keyword 'year' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "design_next",
+      "title": "next",
+      "type": "Feature",
+      "description": "Keyword 'next' from design discussions",
+      "community": "community-design"
+    },
+    {
+      "id": "price_will",
+      "title": "will",
+      "type": "Feature",
+      "description": "Keyword 'will' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_even",
+      "title": "even",
+      "type": "Feature",
+      "description": "Keyword 'even' from price discussions",
+      "community": "community-price"
+    },
+    {
+      "id": "price_going",
+      "title": "going",
+      "type": "Feature",
+      "description": "Keyword 'going' from price discussions",
+      "community": "community-price"
+    }
+  ],
+  "edges": [
+    {
+      "source": "other_will",
+      "target": "other_would",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_will",
+      "target": "other_giphy",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "other_would",
+      "target": "other_giphy",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "software_will",
+      "target": "software_nvidia",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_gaming",
+      "target": "performance_performance",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_gaming",
+      "target": "performance_would",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_gaming",
+      "target": "performance_card",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_would",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_performance",
+      "target": "performance_card",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "performance_would",
+      "target": "performance_card",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_rubin",
+      "target": "design_https",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_rubin",
+      "target": "design_nvidia",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_rubin",
+      "target": "design_year",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_rubin",
+      "target": "design_next",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_https",
+      "target": "design_nvidia",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_https",
+      "target": "design_year",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_https",
+      "target": "design_next",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_nvidia",
+      "target": "design_year",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_nvidia",
+      "target": "design_next",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "design_year",
+      "target": "design_next",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_will",
+      "target": "price_even",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_will",
+      "target": "price_going",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    },
+    {
+      "source": "price_even",
+      "target": "price_going",
+      "type": "CO_OCCURS_WITH",
+      "weight": 1.0
+    }
+  ]
+}

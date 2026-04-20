@@ -1,0 +1,36 @@
+---
+doc_id: doc_reddit_post_826573cc
+canonical_product: new_in_ear_headphones
+source_type: reddit_post
+source_url: https://reddit.com/r/headphones/comments/1ni05fd/thoughts_on_the_fiio_k13_r2r_after_having_it_all/
+title: Thoughts on the FiiO K13 R2R after having it all day (compared to K11 R2R too)
+published_at: '1757975116.0'
+author: robbiekhan
+language: en
+retrieved_at: '2026-04-19T17:47:11.412740Z'
+---
+
+One step in the right direction at last, maybe next model will see a flat remote, too.
+
+First impressions of the K13 R2R vs K11 R2R is that there is a noticeable improvement, not only in amp power, but musicality too. It's closer to my Luxsin X9 than it is to the K11 R2R. There is soundstage and detail in the stereo image yet the smoothness/warmth on planars is still there. It feels like the K11 R2R went to college and came back with some new qualifications.
+
+If I had up to £300 to spend on a DAC/Headphones amp combo, then this would be it for sure. I had the Topping DX5 II previously and disliked how forward it presented the upper midrange and compressed the upper range. the soundstage was also narrower slightly.
+
+The K13 R2R has none of these issues and also comes with a 10 band PEQ, though I run with the EQ off, only using it with the LCD-5 which require EQ to sound good to my ears.
+
+The HE1000se is superb on every amp I have used it with, no exception here on the new R2R, if you have an Arya Stealth then expect the same as I had those before these.
+
+It also just runs slightly warm, unlike the Topping that did get quite hot to the touch, though not too much. I am in a warm room though.
+
+No software bugs to note yet, I also used it as a pre-amp to the Topping PA7 driving Comete 40th Anniversary speakers, it did a fab job again getting very close to the sound signature of the X9 but losing out on the subtle refinements, though all details were clear and present.
+
+I wonder what it would now sound like with a linear DC power supply, there is a new one coming out the same style and size as the K13 R2R
+
+UPDATE\*
+
+I reinstalled the FiiO USB driver as it appears for some reason Windows was still using a Microsoft one. After doing so, the ever so slight delay in initial audio start is now gone. I thought the delay was normal and some sort of protection system but this appears to have been a driver issue all along. The driver also adds ASIO support though not essential as Windows has native WASAPI Exclusive anyway which was working perfectly fine.
+
+  
+UPDATE 2\*
+
+The FiiO App for Android has been updated with support now and you can [control the RGB lighting](https://i.imgur.com/IJu6djx.png) as well as some other stuff. There is no option to set the volume dial button as mute though, that would have been nice. You do get PEQ control here too but I find the web browser interface better to manage the PEQ.

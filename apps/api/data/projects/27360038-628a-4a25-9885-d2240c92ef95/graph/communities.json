@@ -1,0 +1,83 @@
+{
+  "community-software": {
+    "id": "community-software",
+    "title": "Software",
+    "summary": "Discussion cluster around software",
+    "entity_ids": [
+      "software_sound",
+      "software_them"
+    ]
+  },
+  "community-design": {
+    "id": "community-design",
+    "title": "Design",
+    "summary": "Discussion cluster around design",
+    "entity_ids": [
+      "design_sound",
+      "design_them"
+    ]
+  },
+  "community-camera": {
+    "id": "community-camera",
+    "title": "Camera",
+    "summary": "Discussion cluster around camera",
+    "entity_ids": [
+      "camera_easily",
+      "camera_take",
+      "camera_grills",
+      "camera_wanna",
+      "camera_snap"
+    ]
+  },
+  "community-other": {
+    "id": "community-other",
+    "title": "Other",
+    "summary": "Discussion cluster around other",
+    "entity_ids": [
+      "other_headphones",
+      "other_them"
+    ]
+  },
+  "community-price": {
+    "id": "community-price",
+    "title": "Price",
+    "summary": "Discussion cluster around price",
+    "entity_ids": [
+      "price_sound",
+      "price_good"
+    ]
+  },
+  "community-performance": {
+    "id": "community-performance",
+    "title": "Performance",
+    "summary": "Discussion cluster around performance",
+    "entity_ids": [
+      "performance_them",
+      "performance_music",
+      "performance_setup",
+      "performance_live"
+    ]
+  },
+  "community-battery": {
+    "id": "community-battery",
+    "title": "Battery",
+    "summary": "Discussion cluster around battery",
+    "entity_ids": [
+      "battery_will",
+      "battery_would",
+      "battery_first"
+    ]
+  },
+  "community-privacy": {
+    "id": "community-privacy",
+    "title": "Privacy",
+    "summary": "Discussion cluster around privacy",
+    "entity_ids": [
+      "privacy_redact",
+      "privacy_specific",
+      "privacy_post",
+      "privacy_removed",
+      "privacy_using"
+    ]
+  }
+}

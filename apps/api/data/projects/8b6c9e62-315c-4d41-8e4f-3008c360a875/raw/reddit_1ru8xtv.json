@@ -1,0 +1,10 @@
+{
+  "doc_id": "reddit_post_1ru8xtv",
+  "title": "Is it over for my GPU?",
+  "text": "Hello, I bought an AMD 5700 in 2019 and always used that card.  \nToday I turn on my PC but none of my 2 monitors receive the signal.  \nIf I unplug the display port, and I plug it in again, the monitor suddently revive from the standby mode but only to show the \"no signal\" warning few seconds later.  \nIf I plug the display port of my monitors on the motherboard, they works.\n\nSo, does this means my GPU is gone? I don't understand why my monitor revive when I unplug/plug it in again though... and also how this happened overnight, all was working yesterday until the turnoff od my PC\n\nAnd yes, it's the same on all the 3 ports even the unused ports\n\nEDIT: the fans of the GPU are spinning correctly\n\nEDIT 2: The GPU appears correctly in Device Manager\n\nEDIT 3: It's alive. In Safe Mode I used Display Driver Uninstaller (DDU) to clean all the drivers related to my GPU, then in standard mode I installed AMD drivers from 2023 and now it's perfectly working again. During the start today windows installed some system updates, for sure they messed up something, it's the only reason I could think of. I leave this here in case someone may need it in the future.",
+  "score": 11,
+  "url": "https://reddit.com/r/graphicscard/comments/1ru8xtv/is_it_over_for_my_gpu/",
+  "author": "Fun-Yard-6952",
+  "date": "1773564098.0",
+  "source_type": "reddit_post"
+}
